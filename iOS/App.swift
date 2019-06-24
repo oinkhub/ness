@@ -13,4 +13,8 @@ private(set) weak var app: App!
         self.window = window
         return true
     }
+    
+    func browse() {
+        
+    }
 }
