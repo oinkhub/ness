@@ -25,8 +25,11 @@
 		CE484DD122C0D4C3002D26BD /* SFMono-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCE22C0D4C3002D26BD /* SFMono-Bold.otf */; };
 		CE484DD222C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
 		CE484DD322C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
-		CE9D5A2722C0F20C007B9474 /* Tab.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D5A2622C0F20C007B9474 /* Tab.swift */; };
 		CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D5A2822C0F9C6007B9474 /* Extensions.swift */; };
+		CEC926B822C1E66100E0A546 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B722C1E66100E0A546 /* Button.swift */; };
+		CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
+		CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
+		CEC926BE22C1E9DC00E0A546 /* Edit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926BC22C1E9B100E0A546 /* Edit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,8 +79,10 @@
 		CE484DCE22C0D4C3002D26BD /* SFMono-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFMono-Bold.otf"; sourceTree = "<group>"; };
 		CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFMono-Light.otf"; sourceTree = "<group>"; };
 		CE484DD422C0D526002D26BD /* Ness.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ness.sketch; sourceTree = "<group>"; };
-		CE9D5A2622C0F20C007B9474 /* Tab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tab.swift; sourceTree = "<group>"; };
 		CE9D5A2822C0F9C6007B9474 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEC926B722C1E66100E0A546 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		CEC926B922C1E6CF00E0A546 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		CEC926BC22C1E9B100E0A546 /* Edit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +178,9 @@
 			isa = PBXGroup;
 			children = (
 				CE484DAF22C0CCAE002D26BD /* App.swift */,
+				CEC926B722C1E66100E0A546 /* Button.swift */,
+				CEC926BC22C1E9B100E0A546 /* Edit.swift */,
 				CE9D5A2822C0F9C6007B9474 /* Extensions.swift */,
-				CE9D5A2622C0F20C007B9474 /* Tab.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -190,6 +196,7 @@
 		CE484DB922C0CCCA002D26BD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				CEC926B922C1E6CF00E0A546 /* Shared.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -417,6 +424,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */,
 				CE484DB722C0CCC1002D26BD /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,9 +433,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */,
 				CE484DB222C0CCAE002D26BD /* App.swift in Sources */,
 				CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */,
-				CE9D5A2722C0F20C007B9474 /* Tab.swift in Sources */,
+				CEC926B822C1E66100E0A546 /* Button.swift in Sources */,
+				CEC926BE22C1E9DC00E0A546 /* Edit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
