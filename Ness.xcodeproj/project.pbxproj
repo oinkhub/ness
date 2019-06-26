@@ -25,10 +25,6 @@
 		CE484DD122C0D4C3002D26BD /* SFMono-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCE22C0D4C3002D26BD /* SFMono-Bold.otf */; };
 		CE484DD222C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
 		CE484DD322C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
-		CE61FAC022C2339400A0343A /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE61FABF22C2339400A0343A /* Dispatch.swift */; };
-		CE61FAC122C2339400A0343A /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE61FABF22C2339400A0343A /* Dispatch.swift */; };
-		CE61FAC522C24AC500A0343A /* Errorness.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE61FAC422C24AC500A0343A /* Errorness.swift */; };
-		CE61FAC622C24AC500A0343A /* Errorness.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE61FAC422C24AC500A0343A /* Errorness.swift */; };
 		CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D5A2822C0F9C6007B9474 /* Extensions.swift */; };
 		CEC926B822C1E66100E0A546 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B722C1E66100E0A546 /* Button.swift */; };
 		CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
@@ -37,6 +33,8 @@
 		CECC1AAC22C227230011CDD4 /* Desk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECC1AAB22C227230011CDD4 /* Desk.swift */; };
 		CECC1AAD22C227230011CDD4 /* Desk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECC1AAB22C227230011CDD4 /* Desk.swift */; };
 		CECC1AAE22C2277F0011CDD4 /* libNess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE484DBE22C0D1DB002D26BD /* libNess.a */; };
+		CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7B22C3476E00E59D80 /* Sheet.swift */; };
+		CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7D22C3480D00E59D80 /* Name.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,13 +84,13 @@
 		CE484DCE22C0D4C3002D26BD /* SFMono-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFMono-Bold.otf"; sourceTree = "<group>"; };
 		CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFMono-Light.otf"; sourceTree = "<group>"; };
 		CE484DD422C0D526002D26BD /* Ness.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ness.sketch; sourceTree = "<group>"; };
-		CE61FABF22C2339400A0343A /* Dispatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
-		CE61FAC422C24AC500A0343A /* Errorness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errorness.swift; sourceTree = "<group>"; };
 		CE9D5A2822C0F9C6007B9474 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEC926B722C1E66100E0A546 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CEC926B922C1E6CF00E0A546 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		CEC926BC22C1E9B100E0A546 /* Edit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit.swift; sourceTree = "<group>"; };
 		CECC1AAB22C227230011CDD4 /* Desk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Desk.swift; sourceTree = "<group>"; };
+		CECE5F7B22C3476E00E59D80 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
+		CECE5F7D22C3480D00E59D80 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,8 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				CECC1AAB22C227230011CDD4 /* Desk.swift */,
-				CE61FABF22C2339400A0343A /* Dispatch.swift */,
-				CE61FAC422C24AC500A0343A /* Errorness.swift */,
 				CE484DA922C0CC92002D26BD /* Session.swift */,
 			);
 			path = Ness;
@@ -195,6 +191,8 @@
 				CEC926B722C1E66100E0A546 /* Button.swift */,
 				CEC926BC22C1E9B100E0A546 /* Edit.swift */,
 				CE9D5A2822C0F9C6007B9474 /* Extensions.swift */,
+				CECE5F7D22C3480D00E59D80 /* Name.swift */,
+				CECE5F7B22C3476E00E59D80 /* Sheet.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -414,9 +412,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE61FAC522C24AC500A0343A /* Errorness.swift in Sources */,
 				CECC1AAC22C227230011CDD4 /* Desk.swift in Sources */,
-				CE61FAC022C2339400A0343A /* Dispatch.swift in Sources */,
 				CE484DAA22C0CC92002D26BD /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,9 +421,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE61FAC622C24AC500A0343A /* Errorness.swift in Sources */,
 				CECC1AAD22C227230011CDD4 /* Desk.swift in Sources */,
-				CE61FAC122C2339400A0343A /* Dispatch.swift in Sources */,
 				CE484DAC22C0CC92002D26BD /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -456,7 +450,9 @@
 				CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */,
 				CE484DB222C0CCAE002D26BD /* App.swift in Sources */,
 				CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */,
+				CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */,
 				CEC926B822C1E66100E0A546 /* Button.swift in Sources */,
+				CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */,
 				CEC926BE22C1E9DC00E0A546 /* Edit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -564,7 +560,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -620,7 +615,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = Ness;
@@ -679,7 +673,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -736,7 +729,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = Ness;
@@ -805,7 +797,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -868,7 +859,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = ness.Tests;

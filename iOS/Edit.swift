@@ -1,6 +1,6 @@
 import UIKit
 
-final class Edit: UIView {
+final class Edit: UIView, UITextViewDelegate {
     private final class Menu: UIView {
         weak var bottom: NSLayoutConstraint! { didSet { bottom.isActive = true } }
         private weak var height: NSLayoutConstraint!
@@ -41,7 +41,7 @@ final class Edit: UIView {
         @objc func toggle(_ button: UIButton) {
             button.isSelected.toggle()
             height.constant = button.isSelected ? 100 : 0
-            UIView.animate(withDuration: 0.4) { [weak self] in self?.superview?.layoutIfNeeded() }
+            UIView.animate(withDuration: 0.4) { self.superview!.layoutIfNeeded() }
         }
     }
     
@@ -72,7 +72,7 @@ final class Edit: UIView {
         }
     }
     
-    final class Text: UITextView {
+    private final class Text: UITextView {
         private weak var height: NSLayoutConstraint!
         
         required init?(coder: NSCoder) { return nil }
@@ -107,7 +107,7 @@ final class Edit: UIView {
         }
     }
     
-    private(set) weak var text: Text!
+    private weak var text: Text!
     private weak var menu: Menu!
     
     required init?(coder: NSCoder) { return nil }
@@ -116,6 +116,7 @@ final class Edit: UIView {
         translatesAutoresizingMaskIntoConstraints = false
 
         let text = Text()
+        text.delegate = self
         addSubview(text)
         self.text = text
         
@@ -146,10 +147,12 @@ final class Edit: UIView {
         indicator.bottomAnchor.constraint(equalTo: menu.topAnchor).isActive = true
         indicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { [weak self] in
-            guard let self = self else { return }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
             self.menu.bottom.constant = { $0.minY < self.frame.height ? -$0.height : 0 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
-            UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) { [weak self] in self?.layoutIfNeeded() }
+            UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) {
+             self.layoutIfNeeded() }
         }
     }
+    
+    func textViewDidChange(_: UITextView) { app.desk.content = text.text }
 }

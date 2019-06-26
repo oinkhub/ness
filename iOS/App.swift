@@ -1,9 +1,11 @@
+import Ness
 import UIKit
 
 private(set) weak var app: App!
-
-@UIApplicationMain final class App: UIViewController, UIApplicationDelegate {
+@UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UIDocumentPickerDelegate {
     var window: UIWindow?
+    private(set) var desk = Desk()
+    private weak var edit: Edit!
     
     func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         app = self
@@ -25,12 +27,22 @@ private(set) weak var app: App!
         edit.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
-    @objc func browse() {
-        let picker = UIDocumentPickerViewController(documentTypes: [], in: .open)
-        present(picker, animated: true, completion: nil)
+    @objc func open() {
+        
     }
     
     @objc func new() {
-        
+        window!.endEditing(true)
+        desk.close({ self.name() }) { self.open() }
+    }
+    
+    private func name() {
+        Name({  }) { _ in
+            
+        }
+        /*
+        let picker = UIDocumentPickerViewController(url: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("myFile.txt"), in: .exportToService)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)*/
     }
 }

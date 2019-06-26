@@ -14,10 +14,10 @@ final class TestDesk: XCTestCase {
         XCTAssertTrue(desk.changed)
     }
     
-    func testOpenEmpty() {
+    func testCloseEmpty() {
         let expect = expectation(description: "")
         DispatchQueue.global(qos: .background).async {
-            self.desk.open({ _ in }) {
+            self.desk.close({ }) {
                 XCTAssertEqual(.main, Thread.current)
                 expect.fulfill()
             }
@@ -25,11 +25,11 @@ final class TestDesk: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
-    func testOpenChanged() {
+    func testCloseChanged() {
         let expect = expectation(description: "")
         desk.content = "hello world"
         DispatchQueue.global(qos: .background).async {
-            self.desk.open({ _ in
+            self.desk.close({
                 XCTAssertEqual(.main, Thread.current)
                 expect.fulfill()
             }) { }

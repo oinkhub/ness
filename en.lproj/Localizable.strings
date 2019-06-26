@@ -1,1 +1,4 @@
-
+Name.title="Save as";
+Name.save="Save";
+Name.discard="Discard";
+Name.cancel="Cancel";
