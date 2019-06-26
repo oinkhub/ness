@@ -18,11 +18,11 @@ final class Edit: UIView, UITextViewDelegate {
             
             let new = UIButton()
             new.addTarget(app, action: #selector(app.new), for: .touchUpInside)
-            new.translatesAutoresizingMaskIntoConstraints = false
             new.setImage(UIImage(named: "new"), for: .normal)
-            new.imageView!.contentMode = .center
-            new.imageView!.clipsToBounds = true
-            addSubview(new)
+            
+            let open = UIButton()
+            open.addTarget(app, action: #selector(app.open), for: .touchUpInside)
+            open.setImage(UIImage(named: "open"), for: .normal)
             
             height = heightAnchor.constraint(equalToConstant: 0)
             height.isActive = true
@@ -32,10 +32,19 @@ final class Edit: UIView, UITextViewDelegate {
             border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             
-            new.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-            new.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-            new.widthAnchor.constraint(equalToConstant: 60).isActive = true
-            new.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            var left = leftAnchor
+            [new, open].enumerated().forEach {
+                $0.1.translatesAutoresizingMaskIntoConstraints = false
+                $0.1.imageView!.contentMode = .center
+                $0.1.imageView!.clipsToBounds = true
+                addSubview($0.1)
+                
+                $0.1.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+                $0.1.leftAnchor.constraint(equalTo: left, constant: $0.0 == 0 ? 15 : 0).isActive = true
+                $0.1.widthAnchor.constraint(equalToConstant: 70).isActive = true
+                $0.1.heightAnchor.constraint(equalToConstant: 60).isActive = true
+                left = $0.1.rightAnchor
+            }
         }
         
         @objc func toggle(_ button: UIButton) {

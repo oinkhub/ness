@@ -5,7 +5,8 @@ import UserNotifications
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
-    private(set) var desk = Desk() { didSet { edit.text.text = desk.content } }
+    private var picked: ((URL) -> Void)!
+    private(set) var desk: Desk = .New()
     private weak var edit: Edit!
     
     func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -36,10 +37,7 @@ private(set) weak var app: App!
         }
     }
     
-    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt: [URL]) {
-        print(didPickDocumentsAt)
-        desk = Desk()
-    }
+    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt: [URL]) { picked(didPickDocumentsAt.first!) }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,7 +59,7 @@ private(set) weak var app: App!
                         $0.title = title
                         $0.body = message
                         return UNNotificationRequest(identifier: UUID().uuidString, content: $0, trigger: nil)
-                        } (UNMutableNotificationContent()))
+                    } (UNMutableNotificationContent()))
                 } else {
                     DispatchQueue.main.async { Alert(title, message: message) }
                 }
@@ -71,25 +69,40 @@ private(set) weak var app: App!
         }
     }
     
-    func open() {
-        let picker = UIDocumentPickerViewController(url: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("myFile.txt"), in: .exportToService)
-        picker.delegate = self
-        present(picker, animated: true, completion: nil)
-    }
-    
     @objc func new() {
         window!.endEditing(true)
-        desk.close({ self.name() }) { self.open() }
+        desk.close(error: { _ in
+            Name(discard: { self.open() }) {
+                self.desk.save($0.isEmpty ? .key("App.untitled") : $0, error: {
+                    self.alert(.key("Alert.error.save"), message: $0.localizedDescription)
+                }) {
+                    let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
+                    picker.delegate = self
+                    self.present(picker, animated: true)
+                    self.picked = {
+                        self.alert($0.lastPathComponent, message: .key("Alert.saved"))
+                        self.desk = .New()
+                        self.edit.text.text = ""
+                    }
+                }
+            }
+        }) {
+            self.desk = .New()
+            self.edit.text.text = ""
+            self.edit.text.becomeFirstResponder()
+        }
     }
     
-    private func name() {
-        Name(discard: { self.open() }) {
-            self.desk.save($0.isEmpty ? .key("App.untitled") : $0, error: {
-                self.alert(.key("Error.save"), message: $0.localizedDescription)
-            }) {
-                let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
-                picker.delegate = self
-                self.present(picker, animated: true)
+    @objc func open() {
+        window!.endEditing(true)
+        desk.close(error: { self.alert(.key("Alert.error.save"), message: $0.localizedDescription) }) {
+            let picker = UIDocumentPickerViewController(documentTypes: ["public.content", "public.data"], in: .open)
+            picker.delegate = self
+            self.present(picker, animated: true)
+            self.picked = {
+                self.desk = .Loaded($0, error: { self.alert(.key("Alert.error.load"), message: $0.localizedDescription) }) {
+                    self.edit.text.text = self.desk.content
+                }
             }
         }
     }

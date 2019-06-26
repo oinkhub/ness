@@ -3,4 +3,6 @@ Name.title="Save as";
 Name.save="Save";
 Name.discard="Discard";
 Name.cancel="Cancel";
-Error.save="Error saving file";
+Alert.saved="Is now saved";
+Alert.error.save="Error saving file";
+Alert.error.load="Error loading file";

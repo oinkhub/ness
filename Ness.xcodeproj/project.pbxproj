@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CE484DA722C0CBFA002D26BD /* TestDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA622C0CBFA002D26BD /* TestDesk.swift */; };
+		CE484DA722C0CBFA002D26BD /* TestDeskNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA622C0CBFA002D26BD /* TestDeskNew.swift */; };
 		CE484DAA22C0CC92002D26BD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA922C0CC92002D26BD /* Session.swift */; };
 		CE484DAC22C0CC92002D26BD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA922C0CC92002D26BD /* Session.swift */; };
 		CE484DB122C0CCAE002D26BD /* iOS.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE484DAE22C0CCAE002D26BD /* iOS.storyboard */; };
@@ -26,6 +26,8 @@
 		CE484DD222C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
 		CE484DD322C0D4C3002D26BD /* SFMono-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */; };
 		CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D5A2822C0F9C6007B9474 /* Extensions.swift */; };
+		CEBEFF1F22C381A400E74B85 /* TestDeskLoaded.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */; };
+		CEBEFF2122C381AD00E74B85 /* TestDesk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBEFF2022C381AD00E74B85 /* TestDesk.swift */; };
 		CEC926B822C1E66100E0A546 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B722C1E66100E0A546 /* Button.swift */; };
 		CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
 		CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
@@ -67,7 +69,7 @@
 		CE484DA222C0CBE7002D26BD /* iOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = iOS.plist; sourceTree = "<group>"; };
 		CE484DA322C0CBE7002D26BD /* Mac.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Mac.plist; sourceTree = "<group>"; };
 		CE484DA422C0CBE7002D26BD /* Tests.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Tests.plist; sourceTree = "<group>"; };
-		CE484DA622C0CBFA002D26BD /* TestDesk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDesk.swift; sourceTree = "<group>"; };
+		CE484DA622C0CBFA002D26BD /* TestDeskNew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestDeskNew.swift; sourceTree = "<group>"; };
 		CE484DA922C0CC92002D26BD /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CE484DAB22C0CC92002D26BD /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE484DAE22C0CCAE002D26BD /* iOS.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iOS.storyboard; sourceTree = "<group>"; };
@@ -86,6 +88,8 @@
 		CE484DCF22C0D4C3002D26BD /* SFMono-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFMono-Light.otf"; sourceTree = "<group>"; };
 		CE484DD422C0D526002D26BD /* Ness.sketch */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ness.sketch; sourceTree = "<group>"; };
 		CE9D5A2822C0F9C6007B9474 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDeskLoaded.swift; sourceTree = "<group>"; };
+		CEBEFF2022C381AD00E74B85 /* TestDesk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDesk.swift; sourceTree = "<group>"; };
 		CEC926B722C1E66100E0A546 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CEC926B922C1E6CF00E0A546 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		CEC926BC22C1E9B100E0A546 /* Edit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit.swift; sourceTree = "<group>"; };
@@ -172,7 +176,9 @@
 		CE484DA522C0CBFA002D26BD /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				CE484DA622C0CBFA002D26BD /* TestDesk.swift */,
+				CEBEFF2022C381AD00E74B85 /* TestDesk.swift */,
+				CE484DA622C0CBFA002D26BD /* TestDeskNew.swift */,
+				CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -433,7 +439,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE484DA722C0CBFA002D26BD /* TestDesk.swift in Sources */,
+				CE484DA722C0CBFA002D26BD /* TestDeskNew.swift in Sources */,
+				CEBEFF2122C381AD00E74B85 /* TestDesk.swift in Sources */,
+				CEBEFF1F22C381A400E74B85 /* TestDeskLoaded.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
