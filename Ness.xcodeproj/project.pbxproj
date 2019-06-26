@@ -35,6 +35,7 @@
 		CECC1AAE22C2277F0011CDD4 /* libNess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE484DBE22C0D1DB002D26BD /* libNess.a */; };
 		CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7B22C3476E00E59D80 /* Sheet.swift */; };
 		CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7D22C3480D00E59D80 /* Name.swift */; };
+		CECE5F8022C3633400E59D80 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7F22C3633400E59D80 /* Alert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		CECC1AAB22C227230011CDD4 /* Desk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Desk.swift; sourceTree = "<group>"; };
 		CECE5F7B22C3476E00E59D80 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		CECE5F7D22C3480D00E59D80 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
+		CECE5F7F22C3633400E59D80 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +195,7 @@
 				CE9D5A2822C0F9C6007B9474 /* Extensions.swift */,
 				CECE5F7D22C3480D00E59D80 /* Name.swift */,
 				CECE5F7B22C3476E00E59D80 /* Sheet.swift */,
+				CECE5F7F22C3633400E59D80 /* Alert.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -453,6 +456,7 @@
 				CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */,
 				CEC926B822C1E66100E0A546 /* Button.swift in Sources */,
 				CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */,
+				CECE5F8022C3633400E59D80 /* Alert.swift in Sources */,
 				CEC926BE22C1E9DC00E0A546 /* Edit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -490,6 +494,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = Ness;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;

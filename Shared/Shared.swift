@@ -1,3 +1,3 @@
 import Foundation
 
-extension String { init(_ key: String) { self = NSLocalizedString(key, comment: "") } }
+extension String { static func key(_ key: String) -> String { return NSLocalizedString(key, comment: "") } }

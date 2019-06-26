@@ -1,4 +1,6 @@
+App.untitled="Untitled";
 Name.title="Save as";
 Name.save="Save";
 Name.discard="Discard";
 Name.cancel="Cancel";
+Error.save="Error saving file";

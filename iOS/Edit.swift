@@ -72,7 +72,7 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
-    private final class Text: UITextView {
+    final class Text: UITextView {
         private weak var height: NSLayoutConstraint!
         
         required init?(coder: NSCoder) { return nil }
@@ -107,7 +107,7 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
-    private weak var text: Text!
+    private(set) weak var text: Text!
     private weak var menu: Menu!
     
     required init?(coder: NSCoder) { return nil }

@@ -6,13 +6,13 @@ final class Name: Sheet, UITextFieldDelegate {
     private weak var name: UITextField!
     
     required init?(coder: NSCoder) { return nil }
-    @discardableResult init(_ discard: @escaping(() -> Void), _ result: @escaping((String) -> Void)) {
+    @discardableResult init(discard: @escaping(() -> Void), result: @escaping((String) -> Void)) {
         self.discard = discard
         self.result = result
         super.init()
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
-        title.text = String.init("Name.title")
+        title.text = .key("Name.title")
         title.font = .systemFont(ofSize: 16, weight: .bold)
         title.textColor = .halo
         addSubview(title)
@@ -38,15 +38,15 @@ final class Name: Sheet, UITextFieldDelegate {
         border.backgroundColor = .halo
         base.addSubview(border)
         
-        let save = Button.Yes(.init("Name.save"))
+        let save = Button.Yes(.key("Name.save"))
         save.addTarget(self, action: #selector(self.save), for: .touchUpInside)
         base.addSubview(save)
         
-        let discard = Button.No(.init("Name.discard"))
+        let discard = Button.No(.key("Name.discard"))
         discard.addTarget(self, action: #selector(self.discarding), for: .touchUpInside)
         base.addSubview(discard)
         
-        let cancel = Button.No(.init("Name.cancel"))
+        let cancel = Button.No(.key("Name.cancel"))
         cancel.addTarget(self, action: #selector(close), for: .touchUpInside)
         base.addSubview(cancel)
         
@@ -77,20 +77,14 @@ final class Name: Sheet, UITextFieldDelegate {
         name.becomeFirstResponder()
     }
     
-    deinit {
-        print("name gone")
-    }
-    
     func textFieldShouldReturn(_: UITextField) -> Bool {
         name.resignFirstResponder()
         return true
     }
     
     @objc private func save() {
-        /*let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name.text!.isEmpty ? .local("Create.untitled") : name.text!)
-        FileManager.default.createFile(atPath: url.path, contents: Data("\n".utf8))
-        result(url)
-        close()*/
+        close()
+        result(name.text!)
     }
     
     @objc private func discarding() {
