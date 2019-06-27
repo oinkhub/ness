@@ -23,13 +23,18 @@ final class TestDeskNew: XCTestCase {
         let expect = expectation(description: "")
         desk.content = "hello world"
         DispatchQueue.global(qos: .background).async {
-            self.desk.close({
+            self.desk.close({ name in
                 XCTAssertEqual(.main, Thread.current)
-                $0("newfile.txt")
-            }, error: { _ in }) {
-                XCTAssertEqual("hello world", try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("newfile.txt")), as: UTF8.self))
-                expect.fulfill()
-            }
+                DispatchQueue.global(qos: .background).async {
+                    name("newfile.txt") {
+                        XCTAssertEqual(.main, Thread.current)
+                        XCTAssertEqual(URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("newfile.txt").path, $0.path)
+                        XCTAssertEqual("hello world", try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("newfile.txt")), as: UTF8.self))
+                        expect.fulfill()
+                    }
+                }
+                
+            }, error: { _ in }) { }
         }
         waitForExpectations(timeout: 1)
     }

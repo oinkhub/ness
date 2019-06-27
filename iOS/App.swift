@@ -70,23 +70,7 @@ private(set) weak var app: App!
     }
     
     @objc func new() {
-        window!.endEditing(true)
-        desk.close(error: { _ in
-            Name(discard: { self.open() }) {
-                self.desk.save($0.isEmpty ? .key("App.untitled") : $0, error: {
-                    self.alert(.key("Alert.error.save"), message: $0.localizedDescription)
-                }) {
-                    let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
-                    picker.delegate = self
-                    self.present(picker, animated: true)
-                    self.picked = {
-                        self.alert($0.lastPathComponent, message: .key("Alert.saved"))
-                        self.desk = .New()
-                        self.edit.text.text = ""
-                    }
-                }
-            }
-        }) {
+        close {
             self.desk = .New()
             self.edit.text.text = ""
             self.edit.text.becomeFirstResponder()
@@ -94,9 +78,9 @@ private(set) weak var app: App!
     }
     
     @objc func open() {
-        window!.endEditing(true)
-        desk.close(error: { self.alert(.key("Alert.error.save"), message: $0.localizedDescription) }) {
+        close {
             let picker = UIDocumentPickerViewController(documentTypes: ["public.content", "public.data"], in: .open)
+            picker.popoverPresentationController?.sourceView = self.view
             picker.delegate = self
             self.present(picker, animated: true)
             self.picked = {
@@ -105,5 +89,23 @@ private(set) weak var app: App!
                 }
             }
         }
+    }
+    
+    private func close(_ then: @escaping(() -> Void)) {
+        window!.endEditing(true)
+        desk.close({ name in
+            Name(discard: then) {
+                name($0) {
+                    let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
+                    picker.popoverPresentationController?.sourceView = self.view
+                    picker.delegate = self
+                    self.present(picker, animated: true)
+                    self.picked = {
+                        self.alert($0.lastPathComponent, message: .key("Alert.saved"))
+                        then()
+                    }
+                }
+            }
+        }, error: { self.alert(.key("Alert.error.save"), message: $0.localizedDescription) }, done: then)
     }
 }

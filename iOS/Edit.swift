@@ -98,7 +98,7 @@ final class Edit: UIView, UITextViewDelegate {
             textColor = .white
             tintColor = .halo
             keyboardDismissMode = .interactive
-            font = .light(18)
+            font = .light(16)
             keyboardType = .alphabet
             keyboardAppearance = .dark
             autocorrectionType = .yes
@@ -111,7 +111,7 @@ final class Edit: UIView, UITextViewDelegate {
         
         override func caretRect(for position: UITextPosition) -> CGRect {
             var rect = super.caretRect(for: position)
-            rect.size.width += 3
+            rect.size.width += 2
             return rect
         }
     }

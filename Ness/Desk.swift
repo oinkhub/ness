@@ -4,11 +4,12 @@ public class Desk {
     public final class New: Desk {
         public override init() { super.init() }
         
-        public override func close(_ save: @escaping((@escaping ((String) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
+        public override func close(_ save: @escaping((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
             if changed {
                 DispatchQueue.main.async {
-                    save { [weak self] in
-                        self?.save(URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent($0), error: error, done: done)
+                    save { [weak self] name, result in
+                        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
+                        self?.save(url, error: error) { result(url) }
                     }
                 }
             } else {
@@ -34,7 +35,7 @@ public class Desk {
             }
         }
         
-        public override func close(_ save: @escaping ((@escaping ((String) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
+        public override func close(_ save: @escaping ((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
             if changed {
                 self.save(url, error: error) { [weak self] in
                     self?.url.stopAccessingSecurityScopedResource()
@@ -51,8 +52,8 @@ public class Desk {
     private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     
     private init() { }
-    
-    public func close(_ save: @escaping((@escaping((String) -> Void)) -> Void), error: @escaping((Error) -> Void), done: @escaping(() -> Void)) { }
+
+    public func close(_ save: @escaping((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping((Error) -> Void), done: @escaping(() -> Void)) { }
     
     private func save(_ url: URL, error: @escaping((Error) -> Void), done: @escaping(() -> Void)) {
         queue.async { [weak self] in
