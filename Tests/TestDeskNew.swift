@@ -34,4 +34,20 @@ final class TestDeskNew: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
+    
+    func testDifferentURL() {
+        let expect = expectation(description: "")
+        Desk.timeout = 0
+        let deskA = Desk.New()
+        deskA.update("hello world")
+        let deskB = Desk.New()
+        deskB.update("lorem ipsum")
+        DispatchQueue.global(qos: .background).async {
+            XCTAssertNotNil(deskA.url)
+            XCTAssertNotNil(deskB.url)
+            XCTAssertNotEqual(deskA.url?.lastPathComponent, deskB.url?.lastPathComponent)
+            expect.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
 }

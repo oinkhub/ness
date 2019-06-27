@@ -2,13 +2,21 @@ import Foundation
 
 public class Desk {
     public final class New: Desk {
-        private let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("cache")
-        private var saveable = false
+        var url: URL?
         
-        public override init() { super.init() }
-        
-        public init(_ done: @escaping(() -> Void)) {
+        public override init() {
             super.init()
+            timer.setEventHandler { [weak self] in
+                guard let self = self else { return }
+                if self.url == nil {
+                    self.url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
+                }
+                self.save(self.url!)
+            }
+        }
+        
+        convenience init(_ done: @escaping(() -> Void)) {
+            self.init()
             queue.async { [weak self] in
                 guard let url = self?.url else { return }
                 if let content = try? String(decoding: Data(contentsOf: url), as: UTF8.self) {
@@ -20,6 +28,7 @@ public class Desk {
         }
         
         public override func close(_ save: @escaping((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
+            timer.schedule(deadline: .distantFuture)
             if saveable {
                 DispatchQueue.main.async {
                     save { [weak self] name, result in
@@ -38,16 +47,9 @@ public class Desk {
             }
         }
         
-        public override func update(_ content: String) {
-            super.update(content)
-            saveable = true
-        }
-        
-        override func save() { save(url) }
-        
         private func clean() {
-            if FileManager.default.fileExists(atPath: url.path) {
-                try? FileManager.default.removeItem(at: url)
+            if url != nil && FileManager.default.fileExists(atPath: url!.path) {
+                try? FileManager.default.removeItem(at: url!)
             }
         }
     }
@@ -67,10 +69,15 @@ public class Desk {
                     DispatchQueue.main.async { error(exception) }
                 }
             }
+            timer.setEventHandler { [weak self] in
+                guard let url = self?.url else { return }
+                self?.save(url)
+            }
         }
         
         public override func close(_ save: @escaping ((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
-            if changed {
+            timer.schedule(deadline: .distantFuture)
+            if saveable {
                 self.save(url, error: error) { [weak self] in
                     self?.url.stopAccessingSecurityScopedResource()
                     done()
@@ -79,34 +86,26 @@ public class Desk {
                 DispatchQueue.main.async { done() }
             }
         }
-        
-        override func save() { save(url) }
     }
     
     static var timeout = TimeInterval(1)
     public private(set) var content = ""
-    private(set) var changed = false
+    var saveable = false
     private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
     private let timer = DispatchSource.makeTimerSource(queue: .global(qos: .background))
     
     private init() {
         timer.resume()
-        timer.schedule(deadline: .now() + Desk.timeout, repeating: Desk.timeout)
-        timer.setEventHandler { [weak self] in
-            if self?.changed == true {
-                self?.save()
-                self?.changed = false
-            }
-        }
+        timer.schedule(deadline: .distantFuture)
     }
     
     public func update(_ content: String) {
         self.content = content
-        changed = true
+        saveable = true
+        timer.schedule(deadline: .now() + Desk.timeout)
     }
 
     public func close(_ save: @escaping((@escaping ((String, @escaping((URL) -> Void)) -> Void)) -> Void), error: @escaping((Error) -> Void), done: @escaping(() -> Void)) { }
-    private func save() { }
     
     private final func save(_ url: URL, error: ((Error) -> Void)? = nil, done: (() -> Void)? = nil) {
         queue.async { [weak self] in
