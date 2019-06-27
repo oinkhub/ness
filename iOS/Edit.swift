@@ -194,5 +194,5 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
-    func textViewDidChange(_: UITextView) { app.desk.content = text.text }
+    func textViewDidChange(_: UITextView) { app.desk.update(text.text) }
 }

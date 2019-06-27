@@ -2,16 +2,11 @@ import XCTest
 @testable import Ness
 
 final class TestDeskNew: XCTestCase {
-    private var desk: Desk!
-    
-    override func setUp() {
-        desk = .New()
-    }
-    
     func testCloseEmpty() {
         let expect = expectation(description: "")
+        let desk = Desk.New()
         DispatchQueue.global(qos: .background).async {
-            self.desk.close({ _ in }, error: { _ in }) {
+            desk.close({ _ in }, error: { _ in }) {
                 XCTAssertEqual(.main, Thread.current)
                 expect.fulfill()
             }
@@ -21,9 +16,10 @@ final class TestDeskNew: XCTestCase {
     
     func testCloseChanged() {
         let expect = expectation(description: "")
-        desk.content = "hello world"
+        let desk = Desk.New()
+        desk.update("hello world")
         DispatchQueue.global(qos: .background).async {
-            self.desk.close({ name in
+            desk.close({ name in
                 XCTAssertEqual(.main, Thread.current)
                 DispatchQueue.global(qos: .background).async {
                     name("newfile.txt") {

@@ -17,13 +17,49 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="MQr-fV-f5b">
+                                <rect key="frame" x="168" y="423.5" width="78" height="49"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="49" id="f2c-Fl-1UU"/>
+                                    <constraint firstAttribute="width" constant="78" id="ppe-nB-Z0s"/>
+                                </constraints>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="indicator" translatesAutoresizingMaskIntoConstraints="NO" id="pAn-8W-aYe">
+                                <rect key="frame" x="172" y="792" width="70" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="MQz-vg-yIe"/>
+                                    <constraint firstAttribute="width" constant="70" id="eG1-BL-hHA"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HaM-62-8Gm">
+                                <rect key="frame" x="0.0" y="476" width="414" height="2"/>
+                                <color key="backgroundColor" red="0.27190345525741577" green="0.77411848306655884" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="89B-8M-LJk"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="HaM-62-8Gm" firstAttribute="top" secondItem="MQr-fV-f5b" secondAttribute="bottom" constant="3.5" id="A0C-39-Tn1"/>
+                            <constraint firstItem="MQr-fV-f5b" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="MkN-KX-nSd"/>
+                            <constraint firstItem="MQr-fV-f5b" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="SKb-0o-qVe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="pAn-8W-aYe" secondAttribute="bottom" id="hqf-Tv-zZA"/>
+                            <constraint firstAttribute="trailing" secondItem="HaM-62-8Gm" secondAttribute="trailing" id="mTQ-G7-zbo"/>
+                            <constraint firstItem="HaM-62-8Gm" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="rx2-mz-3WA"/>
+                            <constraint firstItem="pAn-8W-aYe" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zLK-y3-ofy"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52.173913043478265" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="indicator" width="12" height="12"/>
+        <image name="logo" width="78" height="49"/>
+    </resources>
 </document>

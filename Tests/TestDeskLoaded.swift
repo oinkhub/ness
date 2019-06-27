@@ -39,6 +39,7 @@ final class TestDeskLoaded: XCTestCase {
         let expect = expectation(description: "")
         desk = .Loaded(url, error: { _ in }) {
             DispatchQueue.global(qos: .background).async {
+                XCTAssertFalse(self.desk.changed)
                 self.desk.close({ _ in }, error: { _ in }) {
                     XCTAssertEqual(.main, Thread.current)
                     expect.fulfill()
@@ -51,7 +52,7 @@ final class TestDeskLoaded: XCTestCase {
     func testCloseChanged() {
         let expect = expectation(description: "")
         desk = .Loaded(url, error: { _ in }) {
-            self.desk.content = "updated text"
+            self.desk.update("updated text")
             self.desk.close({ _ in }, error: { _ in }) {
                 XCTAssertEqual("updated text", try? String(decoding: Data(contentsOf: self.url), as: UTF8.self))
                 expect.fulfill()
