@@ -39,7 +39,7 @@ final class Edit: UIView, UITextViewDelegate {
                 $0.1.imageView!.clipsToBounds = true
                 addSubview($0.1)
                 
-                $0.1.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+                $0.1.topAnchor.constraint(equalTo: topAnchor).isActive = true
                 $0.1.leftAnchor.constraint(equalTo: left, constant: $0.0 == 0 ? 15 : 0).isActive = true
                 $0.1.widthAnchor.constraint(equalToConstant: 70).isActive = true
                 $0.1.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -49,7 +49,7 @@ final class Edit: UIView, UITextViewDelegate {
         
         @objc func toggle(_ button: UIButton) {
             button.isSelected.toggle()
-            height.constant = button.isSelected ? 100 : 0
+            height.constant = button.isSelected ? 60 : 0
             UIView.animate(withDuration: 0.4) { self.superview!.layoutIfNeeded() }
         }
     }
@@ -149,15 +149,29 @@ final class Edit: UIView, UITextViewDelegate {
         
         menu.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         menu.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        menu.bottom = menu.bottomAnchor.constraint(equalTo: bottomAnchor)
+        if #available(iOS 11.0, *) {
+            menu.bottom = menu.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        } else {
+            menu.bottom = menu.bottomAnchor.constraint(equalTo: bottomAnchor)
+        }
         
         indicator.widthAnchor.constraint(equalToConstant: 70).isActive = true
-        indicator.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        indicator.heightAnchor.constraint(equalToConstant: 70).isActive = true
         indicator.bottomAnchor.constraint(equalTo: menu.topAnchor).isActive = true
         indicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
-            self.menu.bottom.constant = { $0.minY < self.frame.height ? -$0.height : 0 } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
+            self.menu.bottom.constant = {
+                if $0.minY < self.frame.height {
+                    if #available(iOS 11.0, *) {
+                        return -($0.height - self.safeAreaInsets.bottom)
+                    } else {
+                        return -$0.height
+                    }
+                } else {
+                    return 0
+                }
+            } (($0.userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue)
             UIView.animate(withDuration: ($0.userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue) {
              self.layoutIfNeeded() }
         }
