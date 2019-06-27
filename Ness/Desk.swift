@@ -8,7 +8,7 @@ public class Desk {
         
         public override func close(error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
             if changed {
-                DispatchQueue.main.async { error(NSError(domain: "Needs saving", code: 0)) }
+                DispatchQueue.main.async { error(Fail("Needs saving")) }
             } else {
                 DispatchQueue.main.async { done() }
             }

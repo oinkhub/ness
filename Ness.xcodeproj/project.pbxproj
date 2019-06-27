@@ -32,6 +32,8 @@
 		CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
 		CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926B922C1E6CF00E0A546 /* Shared.swift */; };
 		CEC926BE22C1E9DC00E0A546 /* Edit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC926BC22C1E9B100E0A546 /* Edit.swift */; };
+		CEC96B0322C4880C00D2DE43 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC96B0222C4880C00D2DE43 /* Extensions.swift */; };
+		CEC96B0422C4880C00D2DE43 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC96B0222C4880C00D2DE43 /* Extensions.swift */; };
 		CECC1AAC22C227230011CDD4 /* Desk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECC1AAB22C227230011CDD4 /* Desk.swift */; };
 		CECC1AAD22C227230011CDD4 /* Desk.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECC1AAB22C227230011CDD4 /* Desk.swift */; };
 		CECC1AAE22C2277F0011CDD4 /* libNess.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE484DBE22C0D1DB002D26BD /* libNess.a */; };
@@ -93,6 +95,7 @@
 		CEC926B722C1E66100E0A546 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CEC926B922C1E6CF00E0A546 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		CEC926BC22C1E9B100E0A546 /* Edit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit.swift; sourceTree = "<group>"; };
+		CEC96B0222C4880C00D2DE43 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CECC1AAB22C227230011CDD4 /* Desk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Desk.swift; sourceTree = "<group>"; };
 		CECE5F7B22C3476E00E59D80 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		CECE5F7D22C3480D00E59D80 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
@@ -187,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				CECC1AAB22C227230011CDD4 /* Desk.swift */,
+				CEC96B0222C4880C00D2DE43 /* Extensions.swift */,
 				CE484DA922C0CC92002D26BD /* Session.swift */,
 			);
 			path = Ness;
@@ -422,6 +426,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECC1AAC22C227230011CDD4 /* Desk.swift in Sources */,
+				CEC96B0322C4880C00D2DE43 /* Extensions.swift in Sources */,
 				CE484DAA22C0CC92002D26BD /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECC1AAD22C227230011CDD4 /* Desk.swift in Sources */,
+				CEC96B0422C4880C00D2DE43 /* Extensions.swift in Sources */,
 				CE484DAC22C0CC92002D26BD /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
