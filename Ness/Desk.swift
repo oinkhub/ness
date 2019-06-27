@@ -2,13 +2,15 @@ import Foundation
 
 public class Desk {
     public final class New: Desk {
-        public override init() {
-            super.init()
-        }
+        public override init() { super.init() }
         
-        public override func close(error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
+        public override func close(_ save: @escaping((@escaping ((String) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
             if changed {
-                DispatchQueue.main.async { error(Fail("Needs saving")) }
+                DispatchQueue.main.async {
+                    save { [weak self] in
+                        self?.save(URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent($0), error: error, done: done)
+                    }
+                }
             } else {
                 DispatchQueue.main.async { done() }
             }
@@ -32,9 +34,9 @@ public class Desk {
             }
         }
         
-        public override func close(error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
+        public override func close(_ save: @escaping ((@escaping ((String) -> Void)) -> Void), error: @escaping ((Error) -> Void), done: @escaping (() -> Void)) {
             if changed {
-                save(url, error: error) { [weak self] in
+                self.save(url, error: error) { [weak self] in
                     self?.url.stopAccessingSecurityScopedResource()
                     done()
                 }
@@ -47,15 +49,10 @@ public class Desk {
     public var content = "" { didSet { changed = true } }
     private(set) var changed = false
     private let queue = DispatchQueue(label: "", qos: .background, target: .global(qos: .background))
-    private init() { }
-    public func close(error: @escaping((Error) -> Void), done: @escaping(() -> Void)) { }
     
-    public func save(_ name: String, error: @escaping((Error) -> Void), done: @escaping((URL) -> Void)) {
-        let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
-        save(URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name), error: error) {
-            done(url)
-        }
-    }
+    private init() { }
+    
+    public func close(_ save: @escaping((@escaping((String) -> Void)) -> Void), error: @escaping((Error) -> Void), done: @escaping(() -> Void)) { }
     
     private func save(_ url: URL, error: @escaping((Error) -> Void), done: @escaping(() -> Void)) {
         queue.async { [weak self] in
