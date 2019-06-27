@@ -84,7 +84,7 @@ final class Name: Sheet, UITextFieldDelegate {
     
     @objc private func save() {
         close()
-        result(name.text!)
+        result(name.text!.isEmpty ? .key("Name.untitled") : name.text!)
     }
     
     @objc private func discarding() {

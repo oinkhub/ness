@@ -74,6 +74,7 @@ private(set) weak var app: App!
             self.desk = .New()
             self.edit.text.text = ""
             self.edit.text.becomeFirstResponder()
+            self.edit.menu.title.text = .key("App.new")
         }
     }
     
@@ -83,9 +84,10 @@ private(set) weak var app: App!
             picker.popoverPresentationController?.sourceView = self.view
             picker.delegate = self
             self.present(picker, animated: true)
-            self.picked = {
-                self.desk = .Loaded($0, error: { self.alert(.key("Alert.error.load"), message: $0.localizedDescription) }) {
+            self.picked = { url in
+                self.desk = .Loaded(url, error: { self.alert(.key("Alert.error.load"), message: $0.localizedDescription) }) {
                     self.edit.text.text = self.desk.content
+                    self.edit.menu.title.text = url.lastPathComponent
                 }
             }
         }
@@ -101,7 +103,7 @@ private(set) weak var app: App!
                     picker.delegate = self
                     self.present(picker, animated: true)
                     self.picked = {
-                        self.alert($0.lastPathComponent, message: .key("Alert.saved"))
+                        self.alert(.key("Alert.new"), message: $0.lastPathComponent)
                         then()
                     }
                 }

@@ -1,8 +1,9 @@
-App.untitled="Untitled";
+App.new="New file";
 Name.title="Save as";
 Name.save="Save";
 Name.discard="Discard";
 Name.cancel="Cancel";
-Alert.saved="Is now saved";
-Alert.error.save="Error saving file";
+Name.untitled="Untitled";
+Alert.new="New file saved";
 Alert.error.load="Error loading file";
+Alert.error.save="Error saving file";

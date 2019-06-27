@@ -1,8 +1,9 @@
 import UIKit
 
 final class Edit: UIView, UITextViewDelegate {
-    private final class Menu: UIView {
-        weak var bottom: NSLayoutConstraint! { didSet { bottom.isActive = true } }
+    final class Menu: UIView {
+        private(set) weak var title: UILabel!
+        fileprivate weak var bottom: NSLayoutConstraint! { didSet { bottom.isActive = true } }
         private weak var height: NSLayoutConstraint!
         
         required init?(coder: NSCoder) { return nil }
@@ -24,6 +25,18 @@ final class Edit: UIView, UITextViewDelegate {
             open.addTarget(app, action: #selector(app.open), for: .touchUpInside)
             open.setImage(UIImage(named: "open"), for: .normal)
             
+            let settings = UIButton()
+            settings.addTarget(app, action: #selector(app.open), for: .touchUpInside)
+            settings.setImage(UIImage(named: "settings"), for: .normal)
+            
+            let title = UILabel()
+            title.translatesAutoresizingMaskIntoConstraints = false
+            title.font = .systemFont(ofSize: 16, weight: .bold)
+            title.textColor = .halo
+            title.text = .key("App.new")
+            addSubview(title)
+            self.title = title
+            
             height = heightAnchor.constraint(equalToConstant: 0)
             height.isActive = true
             
@@ -32,19 +45,23 @@ final class Edit: UIView, UITextViewDelegate {
             border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             
-            var left = leftAnchor
-            [new, open].enumerated().forEach {
+            var right = rightAnchor
+            [settings, open, new].enumerated().forEach {
                 $0.1.translatesAutoresizingMaskIntoConstraints = false
                 $0.1.imageView!.contentMode = .center
                 $0.1.imageView!.clipsToBounds = true
                 addSubview($0.1)
                 
                 $0.1.topAnchor.constraint(equalTo: topAnchor).isActive = true
-                $0.1.leftAnchor.constraint(equalTo: left, constant: $0.0 == 0 ? 15 : 0).isActive = true
+                $0.1.rightAnchor.constraint(equalTo: right, constant: $0.0 == 0 ? -10 : 0).isActive = true
                 $0.1.widthAnchor.constraint(equalToConstant: 70).isActive = true
                 $0.1.heightAnchor.constraint(equalToConstant: 60).isActive = true
-                left = $0.1.rightAnchor
+                right = $0.1.leftAnchor
             }
+            
+            title.centerYAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
+            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            title.rightAnchor.constraint(equalTo: right).isActive = true
         }
         
         @objc func toggle(_ button: UIButton) {
@@ -106,7 +123,7 @@ final class Edit: UIView, UITextViewDelegate {
             autocapitalizationType = .sentences
             contentInset = .zero
             indicatorStyle = .white
-            textContainerInset = .init(top: 16, left: 16, bottom: 30, right: 16)
+            textContainerInset = .init(top: 16, left: 16, bottom: 45, right: 16)
         }
         
         override func caretRect(for position: UITextPosition) -> CGRect {
@@ -117,7 +134,7 @@ final class Edit: UIView, UITextViewDelegate {
     }
     
     private(set) weak var text: Text!
-    private weak var menu: Menu!
+    private(set) weak var menu: Menu!
     
     required init?(coder: NSCoder) { return nil }
     init() {
