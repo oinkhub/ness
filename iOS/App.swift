@@ -94,6 +94,8 @@ private(set) weak var app: App!
         }
     }
     
+    @objc func settings() { Settings() }
+    
     private func close(_ then: @escaping(() -> Void)) {
         window!.endEditing(true)
         if desk.cached && !desk.content.isEmpty {

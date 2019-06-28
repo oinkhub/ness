@@ -26,7 +26,7 @@ final class Edit: UIView, UITextViewDelegate {
             open.setImage(UIImage(named: "open"), for: .normal)
             
             let settings = UIButton()
-            settings.addTarget(app, action: #selector(app.open), for: .touchUpInside)
+            settings.addTarget(app, action: #selector(app.settings), for: .touchUpInside)
             settings.setImage(UIImage(named: "settings"), for: .normal)
             
             let title = UILabel()
