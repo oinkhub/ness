@@ -27,4 +27,19 @@ final class TestDeskNew: XCTestCase {
     func testDifferentURL() {
         XCTAssertNotEqual(Desk.new().url.lastPathComponent, Desk.new().url.lastPathComponent)
     }
+    
+    func testDiscard() {
+        let expect = expectation(description: "")
+        let desk = Desk.new()
+        desk.update("hello world")
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: desk.url.path))
+            desk.discard()
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
+                XCTAssertFalse(FileManager.default.fileExists(atPath: desk.url.path))
+                expect.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+    }
 }

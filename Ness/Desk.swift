@@ -3,7 +3,7 @@ import Foundation
 public class Desk {
     public class func new() -> Desk {
         let desk = Desk(url.appendingPathComponent(UUID().uuidString))
-        desk.nameable = true
+        desk.cached = true
         return desk
     }
     
@@ -14,7 +14,7 @@ public class Desk {
                 try! FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil).forEach {
                     let desk = Desk($0)
                     desk.content = try! String(decoding: Data(contentsOf: $0), as: UTF8.self)
-                    desk.nameable = true
+                    desk.cached = true
                     desks.append(desk)
                 }
             } else { try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true) }
@@ -37,7 +37,7 @@ public class Desk {
     static var timeout = TimeInterval(1)
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(".cache")
     public private(set) var content = ""
-    public private(set) var nameable = false
+    public private(set) var cached = false
     let url: URL
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
@@ -67,5 +67,11 @@ public class Desk {
             try? FileManager.default.removeItem(at: self.url)
             DispatchQueue.main.async { url(temporal) }
         }
+    }
+    
+    public func discard() {
+        timer.setEventHandler(handler: nil)
+        let url = self.url
+        DispatchQueue.global(qos: .background).async { try? FileManager.default.removeItem(at: url) }
     }
 }

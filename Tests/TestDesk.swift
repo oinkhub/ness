@@ -12,7 +12,7 @@ final class TestDesk: XCTestCase {
     }
     
     func testEmpty() {
-        XCTAssertTrue(Desk.new().nameable)
+        XCTAssertTrue(Desk.new().cached)
     }
     
     func testLoadWithCache() {
@@ -23,7 +23,7 @@ final class TestDesk: XCTestCase {
             Desk.cache {
                 XCTAssertEqual(.main, Thread.current)
                 XCTAssertEqual(2, $0.count)
-                XCTAssertTrue($0.first!.nameable)
+                XCTAssertTrue($0.first!.cached)
                 XCTAssertEqual("First file", $0.first?.content)
                 XCTAssertEqual("Second file", $0.last?.content)
                 expect.fulfill()
@@ -38,7 +38,7 @@ final class TestDesk: XCTestCase {
             Desk.cache {
                 XCTAssertEqual(.main, Thread.current)
                 XCTAssertEqual(1, $0.count)
-                XCTAssertTrue($0.first!.nameable)
+                XCTAssertTrue($0.first!.cached)
                 XCTAssertEqual("", $0.first?.content)
                 expect.fulfill()
             }

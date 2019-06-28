@@ -96,8 +96,11 @@ private(set) weak var app: App!
     
     private func close(_ then: @escaping(() -> Void)) {
         window!.endEditing(true)
-        if desk.nameable && !desk.content.isEmpty {
-            Name(discard: then) {
+        if desk.cached && !desk.content.isEmpty {
+            Name(discard: {
+                self.desk.discard()
+                then()
+            }) {
                 self.desk.name($0) {
                     let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
                     picker.popoverPresentationController?.sourceView = self.view
@@ -109,6 +112,8 @@ private(set) weak var app: App!
                     }
                 }
             }
+        } else {
+            then()
         }
     }
 }
