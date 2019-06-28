@@ -32,7 +32,7 @@ final class Edit: UIView, UITextViewDelegate {
             let title = UILabel()
             title.translatesAutoresizingMaskIntoConstraints = false
             title.font = .systemFont(ofSize: 16, weight: .bold)
-            title.textColor = .halo
+            title.textColor = UIColor.halo.withAlphaComponent(0.5)
             title.text = .key("App.new")
             addSubview(title)
             self.title = title

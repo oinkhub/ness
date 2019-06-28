@@ -2,52 +2,46 @@ import XCTest
 @testable import Ness
 
 final class TestDesk: XCTestCase {
-    private var url: URL!
-    private var desk: Desk!
-    
     override func setUp() {
-        url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("cache")
-        if FileManager.default.fileExists(atPath: url.path) {
-            try? FileManager.default.removeItem(at: url)
-        }
+        try! FileManager.default.createDirectory(at: Desk.url, withIntermediateDirectories: true)
+        Desk.timeout = 0
     }
     
-    func testUpdateContent() {
-        desk = .New()
-        XCTAssertFalse(desk.changed)
-        desk.update("hello world")
-        XCTAssertTrue(desk.changed)
+    override func tearDown() {
+        try! FileManager.default.removeItem(at: Desk.url)
     }
     
     func testEmpty() {
+        XCTAssertTrue(Desk.new().nameable)
+    }
+    
+    func testLoadWithCache() {
+        try! Data("First file".utf8).write(to: Desk.url.appendingPathComponent("a"))
+        try! Data("Second file".utf8).write(to: Desk.url.appendingPathComponent("b"))
         let expect = expectation(description: "")
         DispatchQueue.global(qos: .background).async {
-            self.desk = .New {
+            Desk.cache {
                 XCTAssertEqual(.main, Thread.current)
-                XCTAssertEqual("", self.desk.content)
+                XCTAssertEqual(2, $0.count)
+                XCTAssertTrue($0.first!.nameable)
+                XCTAssertEqual("First file", $0.first?.content)
+                XCTAssertEqual("Second file", $0.last?.content)
                 expect.fulfill()
             }
         }
         waitForExpectations(timeout: 1)
     }
     
-    func testLoadWithCache() {
+    func testLoadNoCache() {
         let expect = expectation(description: "")
-        try! Data("hello world".utf8).write(to: url)
-        desk = .New {
-            XCTAssertEqual("hello world", self.desk.content)
-            expect.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-    }
-    
-    func testSaveWithCacheNotEdited() {
-        let expect = expectation(description: "")
-        try! Data("hello world".utf8).write(to: url)
-        desk = .New {
-            self.desk.close({ _ in
+        DispatchQueue.global(qos: .background).async {
+            Desk.cache {
+                XCTAssertEqual(.main, Thread.current)
+                XCTAssertEqual(1, $0.count)
+                XCTAssertTrue($0.first!.nameable)
+                XCTAssertEqual("", $0.first?.content)
                 expect.fulfill()
-            }, error: { _ in }, done: { })
+            }
         }
         waitForExpectations(timeout: 1)
     }

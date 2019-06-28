@@ -4,6 +4,4 @@ Name.save="Save";
 Name.discard="Discard";
 Name.cancel="Cancel";
 Name.untitled="Untitled";
-Alert.new="New file saved";
-Alert.error.load="Error loading file";
-Alert.error.save="Error saving file";
+Alert.new="Saved";

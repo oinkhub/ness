@@ -6,7 +6,7 @@ private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
     private var picked: ((URL) -> Void)!
-    private(set) var desk: Desk = .New()
+    private(set) var desk: Desk! { didSet { edit.text.text = desk.content } }
     private weak var edit: Edit!
     
     func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -49,6 +49,8 @@ private(set) weak var app: App!
         edit.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         edit.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         edit.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        Desk.cache { self.desk = $0.first }
     }
     
     func alert(_ title: String, message: String) {
@@ -71,8 +73,7 @@ private(set) weak var app: App!
     
     @objc func new() {
         close {
-            self.desk = .New()
-            self.edit.text.text = ""
+            self.desk = Desk.new()
             self.edit.text.becomeFirstResponder()
             self.edit.menu.title.text = .key("App.new")
         }
@@ -85,8 +86,8 @@ private(set) weak var app: App!
             picker.delegate = self
             self.present(picker, animated: true)
             self.picked = { url in
-                self.desk = .Loaded(url, error: { self.alert(.key("Alert.error.load"), message: $0.localizedDescription) }) {
-                    self.edit.text.text = self.desk.content
+                Desk.load(url) {
+                    self.desk = $0
                     self.edit.menu.title.text = url.lastPathComponent
                 }
             }
@@ -95,9 +96,9 @@ private(set) weak var app: App!
     
     private func close(_ then: @escaping(() -> Void)) {
         window!.endEditing(true)
-        desk.close({ name in
+        if desk.nameable && !desk.content.isEmpty {
             Name(discard: then) {
-                name($0) {
+                self.desk.name($0) {
                     let picker = UIDocumentPickerViewController(url: $0, in: .exportToService)
                     picker.popoverPresentationController?.sourceView = self.view
                     picker.delegate = self
@@ -108,6 +109,6 @@ private(set) weak var app: App!
                     }
                 }
             }
-        }, error: { self.alert(.key("Alert.error.save"), message: $0.localizedDescription) }, done: then)
+        }
     }
 }

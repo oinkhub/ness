@@ -2,48 +2,28 @@ import XCTest
 @testable import Ness
 
 final class TestDeskLoaded: XCTestCase {
-    private var desk: Desk!
     private var url: URL!
+    private var desk: Desk!
     
     override func setUp() {
         url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
         try! Data("hello world".utf8).write(to: url)
+        try! FileManager.default.createDirectory(at: Desk.url, withIntermediateDirectories: true)
+        Desk.timeout = 0
     }
     
-    override func tearDown() { try? FileManager.default.removeItem(at: url) }
+    override func tearDown() {
+        try? FileManager.default.removeItem(at: url)
+        try! FileManager.default.removeItem(at: Desk.url)
+    }
     
     func testLoadContent() {
         let expect = expectation(description: "")
         DispatchQueue.global(qos: .background).async {
-            self.desk = .Loaded(self.url, error: { _ in }) {
+            Desk.load(self.url) {
                 XCTAssertEqual(.main, Thread.current)
-                XCTAssertEqual("hello world", self.desk.content)
+                XCTAssertEqual("hello world", $0.content)
                 expect.fulfill()
-            }
-        }
-        waitForExpectations(timeout: 1)
-    }
-    
-    func testLoadError() {
-        let expect = expectation(description: "")
-        DispatchQueue.global(qos: .background).async {
-            self.desk = .Loaded(URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("invalid.file"), error: { _ in
-                XCTAssertEqual(.main, Thread.current)
-                expect.fulfill()
-            }) { }
-        }
-        waitForExpectations(timeout: 1)
-    }
-    
-    func testCloseNoChange() {
-        let expect = expectation(description: "")
-        desk = .Loaded(url, error: { _ in }) {
-            DispatchQueue.global(qos: .background).async {
-                XCTAssertFalse(self.desk.changed)
-                self.desk.close({ _ in }, error: { _ in }) {
-                    XCTAssertEqual(.main, Thread.current)
-                    expect.fulfill()
-                }
             }
         }
         waitForExpectations(timeout: 1)
@@ -51,9 +31,11 @@ final class TestDeskLoaded: XCTestCase {
     
     func testCloseChanged() {
         let expect = expectation(description: "")
-        desk = .Loaded(url, error: { _ in }) {
+        Desk.timeout = 0
+        Desk.load(url) {
+            self.desk = $0
             self.desk.update("updated text")
-            self.desk.close({ _ in }, error: { _ in }) {
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
                 XCTAssertEqual("updated text", try? String(decoding: Data(contentsOf: self.url), as: UTF8.self))
                 expect.fulfill()
             }

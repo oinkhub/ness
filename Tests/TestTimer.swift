@@ -2,31 +2,21 @@ import XCTest
 @testable import Ness
 
 final class TestTimer: XCTestCase {
-    private var desk: Desk!
-    
     override func setUp() {
+        try! FileManager.default.createDirectory(at: Desk.url, withIntermediateDirectories: true)
         Desk.timeout = 0
     }
     
-    func testUpdateStatus() {
-        let expect = expectation(description: "")
-        desk = .New()
-        XCTAssertFalse(desk.changed)
-        desk.update("change")
-        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
-            XCTAssertFalse(self.desk.changed)
-            expect.fulfill()
-        }
-        waitForExpectations(timeout: 1)
+    override func tearDown() {
+        try! FileManager.default.removeItem(at: Desk.url)
     }
     
-    func testSaveCache() {
+    func testSave() {
         let expect = expectation(description: "")
-        desk = .New()
-        XCTAssertFalse(desk.changed)
+        let desk = Desk.new()
         desk.update("change")
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
-            XCTAssertEqual("change", try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("cache")), as: UTF8.self))
+            XCTAssertEqual("change", try? String(decoding: Data(contentsOf: desk.url), as: UTF8.self))
             expect.fulfill()
         }
         waitForExpectations(timeout: 1)
@@ -36,9 +26,10 @@ final class TestTimer: XCTestCase {
         let expect = expectation(description: "")
         let url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
         try! Data("hello world".utf8).write(to: url)
-        desk = .Loaded(url, error: { _ in }) {
-            XCTAssertFalse(self.desk.changed)
-            self.desk.update("lorem ipsum")
+        var desk: Desk!
+        Desk.load(url) {
+            desk = $0
+            desk.update("lorem ipsum")
             DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
                 XCTAssertEqual("lorem ipsum", try? String(decoding: Data(contentsOf: url), as: UTF8.self))
                 expect.fulfill()
@@ -49,18 +40,15 @@ final class TestTimer: XCTestCase {
     
     func testNewFileWithCache() {
         let expect = expectation(description: "")
-        desk = .New()
-        XCTAssertFalse(desk.changed)
+        let desk = Desk.new()
         desk.update("change")
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
-            XCTAssertFalse(self.desk.changed)
-            self.desk.close({ name in
-                name("newfile.txt") { _ in
-                    XCTAssertEqual("change", try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("newfile.txt")), as: UTF8.self))
-                    XCTAssertNil(try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("cache")), as: UTF8.self))
-                    expect.fulfill()
-                }
-            }, error: { _ in }) { }
+            XCTAssertNotNil(try? String(decoding: Data(contentsOf: desk.url), as: UTF8.self))
+            desk.name("newfile.txt") { _ in
+                XCTAssertEqual("change", try? String(decoding: Data(contentsOf: URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("newfile.txt")), as: UTF8.self))
+                XCTAssertNil(try? String(decoding: Data(contentsOf: desk.url), as: UTF8.self))
+                expect.fulfill()
+            }
         }
         waitForExpectations(timeout: 1)
     }
