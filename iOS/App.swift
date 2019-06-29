@@ -7,8 +7,8 @@ private(set) weak var app: App!
     var window: UIWindow?
     var session: Session! { didSet { configure() } }
     private(set) var desk: Desk! { didSet { edit.text.text = desk.content } }
+    private(set) weak var edit: Edit!
     private var picked: ((URL) -> Void)!
-    private weak var edit: Edit!
     
     func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         app = self
@@ -21,7 +21,7 @@ private(set) weak var app: App!
             UNUserNotificationCenter.current().delegate = self
             UNUserNotificationCenter.current().getNotificationSettings {
                 if $0.authorizationStatus != .authorized {
-                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 5) {
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 15) {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { _, _ in }
                     }
                 }
@@ -43,15 +43,22 @@ private(set) weak var app: App!
     override func viewDidLoad() {
         super.viewDidLoad()
         let edit = Edit()
-        view.addSubview(edit)
         self.edit = edit
+        view.addSubview(edit)
         
         edit.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         edit.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         edit.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         edit.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
-        Session.load { self.session = $0 }
+        Session.load {
+            self.session = $0
+            if $0.onboard {
+                Onboard()
+                self.edit.menu.toggle(self.edit.indicator)
+            }
+        }
+        
         Desk.cache { self.desk = $0.first }
     }
     

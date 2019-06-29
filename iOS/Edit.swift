@@ -173,6 +173,7 @@ final class Edit: UIView, UITextViewDelegate {
     private(set) weak var ruler: Ruler!
     private(set) weak var line: UIView!
     private(set) weak var menu: Menu!
+    private(set) weak var indicator: UIButton!
     
     required init?(coder: NSCoder) { return nil }
     init() {
@@ -218,6 +219,7 @@ final class Edit: UIView, UITextViewDelegate {
         indicator.imageView!.contentMode = .center
         indicator.addTarget(menu, action: #selector(menu.toggle(_:)), for: .touchUpInside)
         addSubview(indicator)
+        self.indicator = indicator
         
         let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false

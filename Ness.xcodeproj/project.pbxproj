@@ -43,6 +43,7 @@
 		CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7D22C3480D00E59D80 /* Name.swift */; };
 		CECE5F8022C3633400E59D80 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7F22C3633400E59D80 /* Alert.swift */; };
 		CEDE8C1B22C7699900A701D8 /* TestSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE8C1A22C7699900A701D8 /* TestSession.swift */; };
+		CEDE8C1D22C79C4900A701D8 /* Onboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE8C1C22C79C4900A701D8 /* Onboard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +107,7 @@
 		CECE5F7D22C3480D00E59D80 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		CECE5F7F22C3633400E59D80 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		CEDE8C1A22C7699900A701D8 /* TestSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSession.swift; sourceTree = "<group>"; };
+		CEDE8C1C22C79C4900A701D8 /* Onboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 				CEC926BC22C1E9B100E0A546 /* Edit.swift */,
 				CE9D5A2822C0F9C6007B9474 /* Extensions.swift */,
 				CECE5F7D22C3480D00E59D80 /* Name.swift */,
+				CEDE8C1C22C79C4900A701D8 /* Onboard.swift */,
 				CE98A3EE22C62ECD0025ECF3 /* Settings.swift */,
 				CECE5F7B22C3476E00E59D80 /* Sheet.swift */,
 			);
@@ -478,6 +481,7 @@
 				CEC926BB22C1E6CF00E0A546 /* Shared.swift in Sources */,
 				CE484DB222C0CCAE002D26BD /* App.swift in Sources */,
 				CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */,
+				CEDE8C1D22C79C4900A701D8 /* Onboard.swift in Sources */,
 				CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */,
 				CEC926B822C1E66100E0A546 /* Button.swift in Sources */,
 				CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */,
