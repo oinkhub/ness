@@ -134,6 +134,7 @@ final class Edit: UIView, UITextViewDelegate {
 
         let text = Text()
         text.delegate = self
+        text.inputAccessoryView = UIInputView(frame: .init(x: 0, y: 0, width: 0, height: 42), inputViewStyle: .keyboard)
         addSubview(text)
         self.text = text
         
@@ -180,6 +181,23 @@ final class Edit: UIView, UITextViewDelegate {
         title.bottomAnchor.constraint(equalTo: menu.topAnchor, constant: -4).isActive = true
         title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         
+        ["#", "-", "_", "*", "+"].enumerated().forEach {
+            let button = UIButton()
+            button.addTarget(self, action: #selector(input(_:)), for: .touchUpInside)
+            button.setTitle($0.1, for: [])
+            button.setTitleColor(.halo, for: .normal)
+            button.backgroundColor = UIColor.halo.withAlphaComponent(0.1)
+            button.layer.cornerRadius = 3
+            button.titleLabel!.font = .systemFont(ofSize: 20, weight: .regular)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            text.inputAccessoryView!.addSubview(button)
+            
+            button.leftAnchor.constraint(equalTo: text.inputAccessoryView!.centerXAnchor, constant: CGFloat(-162 + ($0.0 * 66))).isActive = true
+            button.topAnchor.constraint(equalTo: text.inputAccessoryView!.topAnchor, constant: 6).isActive = true
+            button.bottomAnchor.constraint(equalTo: text.inputAccessoryView!.bottomAnchor, constant: -4).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        }
+        
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
             self.menu.bottom.constant = {
                 if $0.minY < self.frame.height {
@@ -198,4 +216,5 @@ final class Edit: UIView, UITextViewDelegate {
     }
     
     func textViewDidChange(_: UITextView) { app.desk.update(text.text) }
+    @objc private func input(_ button: UIButton) { text.insertText(button.title(for: [])!) }
 }
