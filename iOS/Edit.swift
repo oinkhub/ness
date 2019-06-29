@@ -62,8 +62,8 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
-    private final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
-        private let padding = CGFloat(4)
+    fileprivate final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
+        let padding = CGFloat(4)
         
         required init?(coder: NSCoder) { return nil }
         override init() {
@@ -89,6 +89,47 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
+    final class Ruler: UIView {
+        fileprivate let thickness = CGFloat(32)
+        fileprivate weak var text: Text!
+        fileprivate weak var layout: Layout!
+        
+        required init?(coder: NSCoder) { return nil }
+        init() {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            isUserInteractionEnabled = false
+            widthAnchor.constraint(equalToConstant: thickness).isActive = true
+        }
+        
+        override func draw(_ rect: CGRect) {
+            UIGraphicsGetCurrentContext()!.clear(rect)
+            var numbers = [(Int, CGFloat, CGFloat)]()
+            let range = layout.glyphRange(for: text.textContainer)
+            var i = 0
+            var c = range.lowerBound
+            while c < range.upperBound {
+                i += 1
+                let end = layout.glyphRange(forCharacterRange: NSRange(location: text.text.lineRange(for:
+                    Range(NSRange(location: c, length: 0), in: text.text)!).upperBound.utf16Offset(in: text.text), length: 0), actualCharacterRange: nil).upperBound
+                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).minY,
+                                !text.isFirstResponder ? 0 : {
+                                    ($0.lowerBound < end && $0.upperBound > c) ||
+                                        $0.upperBound == c ||
+                                        (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.6 : 0
+                                    } (text.selectedRange)))
+                c = end
+            }
+            if layout.extraLineFragmentTextContainer != nil {
+                numbers.append((i + 1, layout.extraLineFragmentRect.minY, text.isFirstResponder && text.selectedRange.lowerBound == c ? 0.6 : 0))
+            }
+            let y = text.textContainerInset.top + layout.padding
+            numbers.map({ (NSAttributedString(string: String($0.0), attributes:
+                [.foregroundColor: UIColor.halo.withAlphaComponent(0.4 + $0.2), .font: UIFont.light(14)]), $0.1) })
+                .forEach { $0.0.draw(at: CGPoint(x: thickness - $0.0.size().width, y: $0.1 + y)) }
+        }
+    }
+
     final class Text: UITextView {
         private weak var height: NSLayoutConstraint!
         
@@ -102,10 +143,10 @@ final class Edit: UIView, UITextViewDelegate {
             } (NSTextContainer(), Layout()))
             translatesAutoresizingMaskIntoConstraints = false
             backgroundColor = .clear
-            alwaysBounceVertical = true
+            bounces = false
+            isScrollEnabled = false
             textColor = .white
             tintColor = .halo
-            keyboardDismissMode = .interactive
             font = .light(16)
             keyboardType = .alphabet
             keyboardAppearance = .dark
@@ -113,8 +154,7 @@ final class Edit: UIView, UITextViewDelegate {
             spellCheckingType = .no
             autocapitalizationType = .none
             contentInset = .zero
-            indicatorStyle = .white
-            textContainerInset = .init(top: 16, left: 16, bottom: 45, right: 16)
+            textContainerInset = .init(top: 16, left: 36, bottom: 45, right: 16)
         }
         
         override func caretRect(for position: UITextPosition) -> CGRect {
@@ -125,6 +165,7 @@ final class Edit: UIView, UITextViewDelegate {
     }
     
     private(set) weak var text: Text!
+    private(set) weak var ruler: Ruler!
     private(set) weak var menu: Menu!
     
     required init?(coder: NSCoder) { return nil }
@@ -132,11 +173,24 @@ final class Edit: UIView, UITextViewDelegate {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
 
+        let scroll = UIScrollView()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        scroll.alwaysBounceVertical = true
+        scroll.keyboardDismissMode = .interactive
+        scroll.indicatorStyle = .white
+        addSubview(scroll)
+        
         let text = Text()
         text.delegate = self
         text.inputAccessoryView = UIInputView(frame: .init(x: 0, y: 0, width: 0, height: 42), inputViewStyle: .keyboard)
-        addSubview(text)
+        scroll.addSubview(text)
         self.text = text
+        
+        let ruler = Ruler()
+        ruler.text = text
+        ruler.layout = text.layoutManager as? Layout
+        text.addSubview(ruler)
+        self.ruler = ruler
         
         let menu = Menu()
         addSubview(menu)
@@ -160,10 +214,22 @@ final class Edit: UIView, UITextViewDelegate {
         addSubview(title)
         menu.title = title
         
-        text.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        text.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        text.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        text.bottomAnchor.constraint(equalTo: menu.topAnchor).isActive = true
+        scroll.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        scroll.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        scroll.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        scroll.bottomAnchor.constraint(equalTo: menu.topAnchor).isActive = true
+        
+        text.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
+        text.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
+        text.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+        text.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+        text.bottomAnchor.constraint(greaterThanOrEqualTo: scroll.bottomAnchor).isActive = true
+        text.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
+        
+        ruler.heightAnchor.constraint(greaterThanOrEqualToConstant: min(app.view.frame.height, app.view.frame.width)).isActive = true
+        ruler.heightAnchor.constraint(greaterThanOrEqualTo: text.heightAnchor).isActive = true
+        ruler.leftAnchor.constraint(equalTo: text.leftAnchor).isActive = true
+        ruler.topAnchor.constraint(equalTo: text.topAnchor).isActive = true
         
         menu.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         menu.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -215,6 +281,22 @@ final class Edit: UIView, UITextViewDelegate {
         }
     }
     
-    func textViewDidChange(_: UITextView) { app.desk.update(text.text) }
+    func textViewDidChange(_: UITextView) {
+        app.desk.update(text.text)
+        ruler.setNeedsDisplay()
+    }
+    
+    func textViewDidChangeSelection(_: UITextView) { ruler.setNeedsDisplay() }
+    
+    func textViewDidBeginEditing(_: UITextView) {
+//        line.isHidden = false
+        ruler.setNeedsDisplay()
+    }
+    
+    func textViewDidEndEditing(_: UITextView) {
+//        line.isHidden = true
+        ruler.setNeedsDisplay()
+    }
+    
     @objc private func input(_ button: UIButton) { text.insertText(button.title(for: [])!) }
 }

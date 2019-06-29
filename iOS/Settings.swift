@@ -164,7 +164,7 @@ final class Settings: UIView {
         
         logo.widthAnchor.constraint(equalToConstant: 40).isActive = true
         logo.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        logo.topAnchor.constraint(equalTo: topAnchor, constant: 80).isActive = true
+        logo.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
         logo.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -60).isActive = true
         
         border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
