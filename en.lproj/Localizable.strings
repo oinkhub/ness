@@ -5,4 +5,7 @@ Name.discard="Discard";
 Name.cancel="Cancel";
 Name.untitled="Untitled";
 Settings.title="Ness    ";
+Settings.spell="Spell checking";
+Settings.numbers="Line numbers";
+Settings.line="Show current line";
 Alert.new="Saved";

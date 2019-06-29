@@ -42,6 +42,7 @@
 		CECE5F7C22C3476E00E59D80 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7B22C3476E00E59D80 /* Sheet.swift */; };
 		CECE5F7E22C3480D00E59D80 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7D22C3480D00E59D80 /* Name.swift */; };
 		CECE5F8022C3633400E59D80 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CECE5F7F22C3633400E59D80 /* Alert.swift */; };
+		CEDE8C1B22C7699900A701D8 /* TestSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDE8C1A22C7699900A701D8 /* TestSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		CECE5F7B22C3476E00E59D80 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		CECE5F7D22C3480D00E59D80 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		CECE5F7F22C3633400E59D80 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		CEDE8C1A22C7699900A701D8 /* TestSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +188,7 @@
 				CEBEFF2022C381AD00E74B85 /* TestDesk.swift */,
 				CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */,
 				CE484DA622C0CBFA002D26BD /* TestDeskNew.swift */,
+				CEDE8C1A22C7699900A701D8 /* TestSession.swift */,
 				CEC96B0522C4C21F00D2DE43 /* TestTimer.swift */,
 			);
 			path = Tests;
@@ -453,6 +456,7 @@
 			files = (
 				CE484DA722C0CBFA002D26BD /* TestDeskNew.swift in Sources */,
 				CEBEFF2122C381AD00E74B85 /* TestDesk.swift in Sources */,
+				CEDE8C1B22C7699900A701D8 /* TestSession.swift in Sources */,
 				CEBEFF1F22C381A400E74B85 /* TestDeskLoaded.swift in Sources */,
 				CEC96B0622C4C21F00D2DE43 /* TestTimer.swift in Sources */,
 			);

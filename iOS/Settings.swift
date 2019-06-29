@@ -1,6 +1,52 @@
 import UIKit
 
 final class Settings: UIView {
+    private final class Check: UIView {
+        private(set) weak var label: UILabel!
+        private(set) weak var button: UIButton!
+        
+        required init?(coder: NSCoder) { return nil }
+        init() {
+            super.init(frame: .zero)
+            translatesAutoresizingMaskIntoConstraints = false
+            
+            let border = UIView()
+            border.translatesAutoresizingMaskIntoConstraints = false
+            border.backgroundColor = UIColor.halo.withAlphaComponent(0.3)
+            border.isUserInteractionEnabled = false
+            addSubview(border)
+            
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.textColor = .white
+            label.font = .systemFont(ofSize: 14, weight: .regular)
+            addSubview(label)
+            self.label = label
+            
+            let button = UIButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.setImage(UIImage(named: "checkOff"), for: .normal)
+            button.setImage(UIImage(named: "checkOn"), for: .selected)
+            addSubview(button)
+            self.button = button
+            
+            heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            label.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            
+            button.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            button.widthAnchor.constraint(equalToConstant: 70).isActive = true
+            
+            border.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+            border.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+            border.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            border.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        }
+    }
+    
     private weak var bottom: NSLayoutConstraint!
     private weak var right: NSLayoutConstraint!
     
@@ -53,12 +99,20 @@ final class Settings: UIView {
         } (NSMutableAttributedString())
         addSubview(version)
         
-        let market = UIButton()
-        market.translatesAutoresizingMaskIntoConstraints = false
-        market.setImage(UIImage(named: "market"), for: .normal)
-        market.imageView!.clipsToBounds = true
-        market.imageView!.contentMode = .center
-        addSubview(market)
+        let spell = Check()
+        spell.label.text = .key("Settings.spell")
+        spell.button.isSelected = app.session.spell
+        spell.button.addTarget(self, action: #selector(self.spell(_:)), for: .touchUpInside)
+        
+        let numbers = Check()
+        numbers.label.text = .key("Settings.numbers")
+        numbers.button.isSelected = app.session.numbers
+        numbers.button.addTarget(self, action: #selector(self.numbers(_:)), for: .touchUpInside)
+        
+        let line = Check()
+        line.label.text = .key("Settings.line")
+        line.button.isSelected = app.session.line
+        line.button.addTarget(self, action: #selector(self.line(_:)), for: .touchUpInside)
         
         top.topAnchor.constraint(equalTo: topAnchor).isActive = true
         top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -87,6 +141,16 @@ final class Settings: UIView {
         
         version.bottomAnchor.constraint(equalTo: border.topAnchor, constant: 1).isActive = true
         version.leftAnchor.constraint(equalTo: logo.rightAnchor, constant: 40).isActive = true
+        
+        var origin = border.bottomAnchor
+        [spell, numbers, line].enumerated().forEach {
+            addSubview($0.1)
+            
+            $0.1.topAnchor.constraint(equalTo: origin, constant: $0.0 == 0 ? 20 : 0).isActive = true
+            $0.1.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            $0.1.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+            origin = $0.1.bottomAnchor
+        }
 
         widthAnchor.constraint(equalTo: app.view.widthAnchor, constant: 2).isActive = true
         heightAnchor.constraint(equalTo: app.view.heightAnchor, constant: 2).isActive = true
@@ -107,6 +171,21 @@ final class Settings: UIView {
         UIView.animate(withDuration: 0.4, animations: {
             app.view.layoutIfNeeded()
         }) { [weak self] _ in self?.removeFromSuperview() }
+    }
+    
+    @objc private func spell(_ button: Button) {
+        button.isSelected.toggle()
+        app.session.spell = button.isSelected
+    }
+    
+    @objc private func numbers(_ button: Button) {
+        button.isSelected.toggle()
+        app.session.numbers = button.isSelected
+    }
+    
+    @objc private func line(_ button: Button) {
+        button.isSelected.toggle()
+        app.session.line = button.isSelected
     }
 }
 

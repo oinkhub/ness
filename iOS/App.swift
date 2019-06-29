@@ -5,8 +5,9 @@ import UserNotifications
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
     var window: UIWindow?
-    private var picked: ((URL) -> Void)!
+    var session: Session! { didSet { configure() } }
     private(set) var desk: Desk! { didSet { edit.text.text = desk.content } }
+    private var picked: ((URL) -> Void)!
     private weak var edit: Edit!
     
     func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -50,6 +51,7 @@ private(set) weak var app: App!
         edit.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         edit.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
+        Session.load { self.session = $0 }
         Desk.cache { self.desk = $0.first }
     }
     
@@ -117,5 +119,23 @@ private(set) weak var app: App!
         } else {
             then()
         }
+    }
+    
+    private func configure() {
+        if session.spell {
+            edit.text.autocorrectionType = .yes
+            edit.text.spellCheckingType = .yes
+            edit.text.autocapitalizationType = .sentences
+        } else {
+            edit.text.autocorrectionType = .no
+            edit.text.spellCheckingType = .no
+            edit.text.autocapitalizationType = .none
+        }
+        edit.text.font = {
+            switch $0 {
+            case .SanFranciscoMono: return .light($1)
+            case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
+            }
+        } (session.font, session.size)
     }
 }

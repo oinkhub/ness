@@ -109,9 +109,9 @@ final class Edit: UIView, UITextViewDelegate {
             font = .light(16)
             keyboardType = .alphabet
             keyboardAppearance = .dark
-            autocorrectionType = .yes
-            spellCheckingType = .yes
-            autocapitalizationType = .sentences
+            autocorrectionType = .no
+            spellCheckingType = .no
+            autocapitalizationType = .none
             contentInset = .zero
             indicatorStyle = .white
             textContainerInset = .init(top: 16, left: 16, bottom: 45, right: 16)
