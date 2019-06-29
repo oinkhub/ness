@@ -113,7 +113,7 @@ final class Edit: UIView, UITextViewDelegate {
                 i += 1
                 let end = layout.glyphRange(forCharacterRange: NSRange(location: text.text.lineRange(for:
                     Range(NSRange(location: c, length: 0), in: text.text)!).upperBound.utf16Offset(in: text.text), length: 0), actualCharacterRange: nil).upperBound
-                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).minY,
+                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
                                 !text.isFirstResponder ? 0 : {
                                     ($0.lowerBound < end && $0.upperBound > c) ||
                                         $0.upperBound == c ||
@@ -122,9 +122,9 @@ final class Edit: UIView, UITextViewDelegate {
                 c = end
             }
             if layout.extraLineFragmentTextContainer != nil {
-                numbers.append((i + 1, layout.extraLineFragmentRect.minY, text.isFirstResponder && text.selectedRange.lowerBound == c ? 0.6 : 0))
+                numbers.append((i + 1, layout.extraLineFragmentRect.midY, text.isFirstResponder && text.selectedRange.lowerBound == c ? 0.6 : 0))
             }
-            let y = text.textContainerInset.top + layout.padding + ((layout.extraLineFragmentRect.height / 2) - 12)
+            let y = text.textContainerInset.top + layout.padding - 12
             numbers.map({ (NSAttributedString(string: String($0.0), attributes:
                 [.foregroundColor: UIColor.halo.withAlphaComponent(0.4 + $0.2), .font: UIFont.light(14)]), $0.1) })
                 .forEach { $0.0.draw(at: CGPoint(x: thickness - $0.0.size().width, y: $0.1 + y)) }
@@ -245,7 +245,7 @@ final class Edit: UIView, UITextViewDelegate {
         ruler.heightAnchor.constraint(greaterThanOrEqualToConstant: max(app.view.frame.height, app.view.frame.width)).isActive = true
         ruler.heightAnchor.constraint(greaterThanOrEqualTo: text.heightAnchor).isActive = true
         ruler.leftAnchor.constraint(equalTo: text.leftAnchor).isActive = true
-        ruler.topAnchor.constraint(equalTo: text.topAnchor).isActive = true
+        ruler.topAnchor.constraint(equalTo: scroll.topAnchor).isActive = true
         
         line.leftAnchor.constraint(equalTo: scroll.leftAnchor).isActive = true
         line.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
