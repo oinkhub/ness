@@ -2,7 +2,7 @@ import UIKit
 
 final class Edit: UIView, UITextViewDelegate {
     final class Menu: UIView {
-        private(set) weak var title: UILabel!
+        fileprivate(set) weak var title: UILabel!
         fileprivate weak var bottom: NSLayoutConstraint! { didSet { bottom.isActive = true } }
         private weak var height: NSLayoutConstraint!
         
@@ -29,14 +29,6 @@ final class Edit: UIView, UITextViewDelegate {
             settings.addTarget(app, action: #selector(app.settings), for: .touchUpInside)
             settings.setImage(UIImage(named: "settings"), for: .normal)
             
-            let title = UILabel()
-            title.translatesAutoresizingMaskIntoConstraints = false
-            title.font = .systemFont(ofSize: 16, weight: .bold)
-            title.textColor = UIColor.halo.withAlphaComponent(0.5)
-            title.text = .key("App.new")
-            addSubview(title)
-            self.title = title
-            
             height = heightAnchor.constraint(equalToConstant: 0)
             height.isActive = true
             
@@ -52,22 +44,21 @@ final class Edit: UIView, UITextViewDelegate {
                 $0.1.imageView!.clipsToBounds = true
                 addSubview($0.1)
                 
-                $0.1.topAnchor.constraint(equalTo: topAnchor).isActive = true
+                $0.1.topAnchor.constraint(equalTo: border.bottomAnchor).isActive = true
                 $0.1.rightAnchor.constraint(equalTo: right, constant: $0.0 == 0 ? -10 : 0).isActive = true
                 $0.1.widthAnchor.constraint(equalToConstant: 70).isActive = true
                 $0.1.heightAnchor.constraint(equalToConstant: 60).isActive = true
                 right = $0.1.leftAnchor
             }
-            
-            title.centerYAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
-            title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-            title.rightAnchor.constraint(equalTo: right).isActive = true
         }
         
         @objc func toggle(_ button: UIButton) {
             button.isSelected.toggle()
             height.constant = button.isSelected ? 60 : 0
-            UIView.animate(withDuration: 0.4) { self.superview!.layoutIfNeeded() }
+            UIView.animate(withDuration: 0.4) {
+                self.superview!.layoutIfNeeded()
+                self.title.alpha = button.isSelected ? 1 : 0
+            }
         }
     }
     
@@ -159,6 +150,15 @@ final class Edit: UIView, UITextViewDelegate {
         indicator.addTarget(menu, action: #selector(menu.toggle(_:)), for: .touchUpInside)
         addSubview(indicator)
         
+        let title = UILabel()
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.font = .systemFont(ofSize: 14, weight: .bold)
+        title.textColor = .halo
+        title.text = .key("App.new")
+        title.alpha = 0
+        addSubview(title)
+        menu.title = title
+        
         text.topAnchor.constraint(equalTo: topAnchor).isActive = true
         text.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         text.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -176,6 +176,9 @@ final class Edit: UIView, UITextViewDelegate {
         indicator.heightAnchor.constraint(equalToConstant: 70).isActive = true
         indicator.bottomAnchor.constraint(equalTo: menu.topAnchor).isActive = true
         indicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        title.bottomAnchor.constraint(equalTo: menu.topAnchor, constant: -4).isActive = true
+        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) {
             self.menu.bottom.constant = {
