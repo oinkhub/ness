@@ -1,6 +1,7 @@
 import Ness
 import UIKit
 import UserNotifications
+import StoreKit
 
 private(set) weak var app: App!
 @UIApplicationMain final class App: UIViewController, UIApplicationDelegate, UIDocumentPickerDelegate, UNUserNotificationCenterDelegate {
@@ -56,6 +57,12 @@ private(set) weak var app: App!
             if $0.onboard {
                 Onboard()
                 self.edit.menu.toggle(self.edit.indicator)
+            }
+            if Date() >= $0.rating {
+                var components = DateComponents()
+                components.month = 4
+                self.session.rating = Calendar.current.date(byAdding: components, to: Date())!
+                if #available(iOS 10.3, *) { SKStoreReviewController.requestReview() }
             }
         }
         
