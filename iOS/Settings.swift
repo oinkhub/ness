@@ -38,6 +38,21 @@ final class Settings: UIView {
         logo.clipsToBounds = true
         addSubview(logo)
         
+        let border = UIView()
+        border.translatesAutoresizingMaskIntoConstraints = false
+        border.backgroundColor = .halo
+        border.isUserInteractionEnabled = false
+        addSubview(border)
+        
+        let version = UILabel()
+        version.translatesAutoresizingMaskIntoConstraints = false
+        version.attributedText = {
+            $0.append(NSAttributedString(string: .key("Settings.title"), attributes: [.foregroundColor: UIColor.halo, .font: UIFont.systemFont(ofSize: 16, weight: .bold)]))
+            $0.append(NSAttributedString(string: (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String), attributes: [.foregroundColor: UIColor.halo.withAlphaComponent(0.8), .font: UIFont.systemFont(ofSize: 12, weight: .bold)]))
+            return $0
+        } (NSMutableAttributedString())
+        addSubview(version)
+        
         let market = UIButton()
         market.translatesAutoresizingMaskIntoConstraints = false
         market.setImage(UIImage(named: "market"), for: .normal)
@@ -62,20 +77,27 @@ final class Settings: UIView {
         
         logo.widthAnchor.constraint(equalToConstant: 40).isActive = true
         logo.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        logo.topAnchor.constraint(equalTo: topAnchor, constant: 100).isActive = true
-        logo.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-
+        logo.topAnchor.constraint(equalTo: topAnchor, constant: 80).isActive = true
+        logo.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -60).isActive = true
         
-        widthAnchor.constraint(equalTo: app.view.widthAnchor).isActive = true
-        heightAnchor.constraint(equalTo: app.view.heightAnchor).isActive = true
+        border.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        border.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        border.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        border.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: -4).isActive = true
+        
+        version.bottomAnchor.constraint(equalTo: border.topAnchor, constant: 1).isActive = true
+        version.leftAnchor.constraint(equalTo: logo.rightAnchor, constant: 40).isActive = true
+
+        widthAnchor.constraint(equalTo: app.view.widthAnchor, constant: 2).isActive = true
+        heightAnchor.constraint(equalTo: app.view.heightAnchor, constant: 2).isActive = true
         bottom = topAnchor.constraint(equalTo: app.view.topAnchor, constant: app.view.frame.height)
         right = leftAnchor.constraint(equalTo: app.view.leftAnchor, constant: app.view.frame.width)
         bottom.isActive = true
         right.isActive = true
         app.view.layoutIfNeeded()
         
-        bottom.constant = 0
-        right.constant = 0
+        bottom.constant = -2
+        right.constant = -2
         UIView.animate(withDuration: 0.5) { app.view.layoutIfNeeded() }
     }
     
