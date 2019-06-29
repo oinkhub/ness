@@ -49,6 +49,7 @@ final class Settings: UIView {
     
     private weak var bottom: NSLayoutConstraint!
     private weak var right: NSLayoutConstraint!
+    private weak var size: UILabel!
     
     required init?(coder: NSCoder) { return nil }
     @discardableResult init() {
@@ -114,6 +115,38 @@ final class Settings: UIView {
         line.button.isSelected = app.session.line
         line.button.addTarget(self, action: #selector(self.line(_:)), for: .touchUpInside)
         
+        let font = UILabel()
+        font.translatesAutoresizingMaskIntoConstraints = false
+        font.textColor = .white
+        font.font = .systemFont(ofSize: 14, weight: .regular)
+        font.text = .key("Settings.font")
+        addSubview(font)
+        
+        let size = UILabel()
+        size.translatesAutoresizingMaskIntoConstraints = false
+        size.textColor = .white
+        size.font = .systemFont(ofSize: 14, weight: .bold)
+        size.text = "\(Int(app.session.size))"
+        addSubview(size)
+        self.size = size
+        
+        let segment = UISegmentedControl(items: [String.key("Settings.mono"), String.key("Settings.regular")])
+        segment.addTarget(self, action: #selector(self.segmented(_:)), for: .valueChanged)
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        segment.tintColor = .halo
+        segment.selectedSegmentIndex = app.session.font == .SanFranciscoMono ? 0 : 1
+        addSubview(segment)
+        
+        let slider = UISlider()
+        slider.addTarget(self, action: #selector(self.slider(_:)), for: .valueChanged)
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.minimumValue = 11
+        slider.maximumValue = 30
+        slider.value = Float(Int(app.session.size))
+        slider.minimumTrackTintColor = .halo
+        slider.maximumTrackTintColor = UIColor.halo.withAlphaComponent(0.3)
+        addSubview(slider)
+        
         top.topAnchor.constraint(equalTo: topAnchor).isActive = true
         top.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         top.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
@@ -145,12 +178,24 @@ final class Settings: UIView {
         var origin = border.bottomAnchor
         [spell, numbers, line].enumerated().forEach {
             addSubview($0.1)
-            
             $0.1.topAnchor.constraint(equalTo: origin, constant: $0.0 == 0 ? 20 : 0).isActive = true
             $0.1.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
             $0.1.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
             origin = $0.1.bottomAnchor
         }
+        
+        font.topAnchor.constraint(equalTo: origin, constant: 30).isActive = true
+        font.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        
+        size.centerYAnchor.constraint(equalTo: segment.centerYAnchor).isActive = true
+        size.rightAnchor.constraint(equalTo: segment.leftAnchor, constant: -10).isActive = true
+        
+        segment.centerYAnchor.constraint(equalTo: font.centerYAnchor).isActive = true
+        segment.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
+        
+        slider.topAnchor.constraint(equalTo: segment.bottomAnchor, constant: 50).isActive = true
+        slider.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+        slider.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
 
         widthAnchor.constraint(equalTo: app.view.widthAnchor, constant: 2).isActive = true
         heightAnchor.constraint(equalTo: app.view.heightAnchor, constant: 2).isActive = true
@@ -186,6 +231,20 @@ final class Settings: UIView {
     @objc private func line(_ button: Button) {
         button.isSelected.toggle()
         app.session.line = button.isSelected
+    }
+    
+    @objc private func slider(_ slider: UISlider) {
+        app.session.size = CGFloat(round(slider.value))
+        size.text = "\(Int(app.session.size))"
+    }
+    
+    @objc private func segmented(_ segmented: UISegmentedControl) {
+        app.session.font = {
+            switch $0 {
+            case 0: return .SanFranciscoMono
+            default: return .SanFrancisco
+            }
+        } (segmented.selectedSegmentIndex)
     }
 }
 

@@ -8,4 +8,7 @@ Settings.title="Ness    ";
 Settings.spell="Spell checking";
 Settings.numbers="Line numbers";
 Settings.line="Show current line";
+Settings.font="Font";
+Settings.mono="Monospace";
+Settings.regular="Regular";
 Alert.new="Saved";
