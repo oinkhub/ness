@@ -137,6 +137,8 @@ private(set) weak var app: App!
             case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
             }
         } (session.font, session.size)
+        edit.line.isHidden = !session.line
         edit.ruler.isHidden = !session.numbers
+        edit.ruler.setNeedsDisplay()
     }
 }
