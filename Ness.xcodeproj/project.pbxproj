@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0775B422C8D881004028D4 /* Edit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0775B322C8D881004028D4 /* Edit.swift */; };
+		CE0775B622C8D8C1004028D4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0775B522C8D8C1004028D4 /* Extensions.swift */; };
 		CE484DA722C0CBFA002D26BD /* TestDeskNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA622C0CBFA002D26BD /* TestDeskNew.swift */; };
 		CE484DAA22C0CC92002D26BD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA922C0CC92002D26BD /* Session.swift */; };
 		CE484DAC22C0CC92002D26BD /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE484DA922C0CC92002D26BD /* Session.swift */; };
@@ -69,6 +71,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE0775B322C8D881004028D4 /* Edit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Edit.swift; sourceTree = "<group>"; };
+		CE0775B522C8D8C1004028D4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CE484D9F22C0CB57002D26BD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CE484DA022C0CB57002D26BD /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CE484DA122C0CB57002D26BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
@@ -226,6 +230,8 @@
 			isa = PBXGroup;
 			children = (
 				CE484DB522C0CCC1002D26BD /* App.swift */,
+				CE0775B322C8D881004028D4 /* Edit.swift */,
+				CE0775B522C8D8C1004028D4 /* Extensions.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -471,6 +477,8 @@
 			files = (
 				CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */,
 				CE484DB722C0CCC1002D26BD /* App.swift in Sources */,
+				CE0775B422C8D881004028D4 /* Edit.swift in Sources */,
+				CE0775B622C8D8C1004028D4 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
