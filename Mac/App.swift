@@ -126,7 +126,15 @@ private(set) weak var app: App!
     private func configure() { }
     
     @objc private func new() { Edit(Desk.new()) }
-    @objc private func open() { }
+    
+    @objc private func open() {
+        let browse = NSOpenPanel()
+        browse.begin { [weak browse] in
+            guard $0 == .OK, let url = browse?.url else { return }
+            Desk.load(url) { Edit($0) }
+        }
+    }
+    
     @objc private func save() { }
     @objc private func about() { }
     @objc private func settings() { }

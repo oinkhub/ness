@@ -46,7 +46,7 @@ final class Edit: NSWindow  {
             font = .light(18)
             string = desk.content
             textColor = .white
-            textContainerInset = NSSize(width: 10, height: 20)
+            textContainerInset = NSSize(width: 10, height: 40)
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
             height.isActive = true
             if #available(OSX 10.12.2, *) {
@@ -122,6 +122,8 @@ final class Edit: NSWindow  {
         title.wantsLayer = true
         title.layer!.backgroundColor = NSColor.halo.cgColor
         title.layer!.cornerRadius = 4
+        title.layer!.borderColor = .black
+        title.layer!.borderWidth = 1
         if #available(OSX 10.13, *) {
             title.layer!.maskedCorners = CACornerMask(arrayLiteral: .layerMaxXMinYCorner, .layerMinXMinYCorner)
         }
@@ -130,10 +132,10 @@ final class Edit: NSWindow  {
         let name = Label()
         name.textColor = .black
         name.font = .systemFont(ofSize: 12, weight: .bold)
-        name.stringValue = .key("App.new")
+        name.stringValue = desk.cached ? .key("App.new") : desk.url.lastPathComponent
         contentView!.addSubview(name)
         
-        scroll.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 30).isActive = true
+        scroll.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 2).isActive = true
         scroll.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor, constant: -2).isActive = true
         scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 2).isActive = true
         scroll.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -2).isActive = true
@@ -144,10 +146,26 @@ final class Edit: NSWindow  {
         name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 4).isActive = true
         name.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         
-        title.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 1).isActive = true
+        title.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
         title.bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 6).isActive = true
         title.leftAnchor.constraint(equalTo: name.leftAnchor, constant: -8).isActive = true
         title.rightAnchor.constraint(equalTo: name.rightAnchor, constant: 8).isActive = true
+        
+        var left = contentView!.leftAnchor
+        (0 ..< 3).forEach {
+            let shadow = NSView()
+            shadow.translatesAutoresizingMaskIntoConstraints = false
+            shadow.wantsLayer = true
+            shadow.layer!.backgroundColor = NSColor(white: 0, alpha: 0.7).cgColor
+            shadow.layer!.cornerRadius = 8
+            contentView!.addSubview(shadow)
+            
+            shadow.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 11).isActive = true
+            shadow.leftAnchor.constraint(equalTo: left, constant: $0 == 0 ? 11 : 4).isActive = true
+            shadow.widthAnchor.constraint(equalToConstant: 16).isActive = true
+            shadow.heightAnchor.constraint(equalToConstant: 16).isActive = true
+            left = shadow.rightAnchor
+        }
         
         makeKeyAndOrderFront(nil)
     }

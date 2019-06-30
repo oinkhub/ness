@@ -38,7 +38,7 @@ public class Desk {
     static let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(".cache")
     public private(set) var content = ""
     public private(set) var cached = false
-    let url: URL
+    public let url: URL
     private let timer = DispatchSource.makeTimerSource(queue: .init(label: "", qos: .background, target: .global(qos: .background)))
     
     fileprivate init(_ url: URL) {
