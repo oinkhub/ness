@@ -150,7 +150,7 @@ private(set) weak var app: App!
             case .SanFranciscoMono: return .light($1)
             case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
             }
-        } (session.font, session.size)
+        } (session.font, CGFloat(session.size))
         edit.line.isHidden = !session.line
         edit.ruler.isHidden = !session.numbers
         edit.ruler.setNeedsDisplay()

@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 public struct Session: Codable {
     public enum Font: Int, Codable {
@@ -19,7 +19,7 @@ public struct Session: Codable {
     public var spell = false { didSet { save() } }
     public var numbers = true { didSet { save() } }
     public var line = true { didSet { save() } }
-    public var size = CGFloat(16.0) { didSet { save() } }
+    public var size = 16.0 { didSet { save() } }
     public var font = Font.SanFranciscoMono { didSet { save() } }
     public var rating = Calendar.current.date(byAdding: {
         var d = DateComponents()

@@ -234,7 +234,7 @@ final class Settings: UIView {
     }
     
     @objc private func slider(_ slider: UISlider) {
-        app.session.size = CGFloat(round(slider.value))
+        app.session.size = Double(round(slider.value))
         size.text = "\(Int(app.session.size))"
     }
     
