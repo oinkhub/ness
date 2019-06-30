@@ -1,7 +1,7 @@
 import Ness
 import AppKit
 
-final class Edit: Window  {
+final class Edit: NSWindow  {
     private final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
         private let padding = CGFloat(8)
         
@@ -24,9 +24,11 @@ final class Edit: Window  {
     }
     
     private final class Text: NSTextView {
+        private let desk: Desk
         private weak var height: NSLayoutConstraint!
         
-        init() {
+        init(_ desk: Desk) {
+            self.desk = desk
             let storage = NSTextStorage()
             super.init(frame: .zero, textContainer: {
                 $1.delegate = $1
@@ -42,6 +44,7 @@ final class Edit: Window  {
             insertionPointColor = .halo
             isContinuousSpellCheckingEnabled = true
             font = .light(18)
+            string = desk.content
             textColor = .white
             textContainerInset = NSSize(width: 10, height: 20)
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
@@ -66,6 +69,7 @@ final class Edit: Window  {
         
         override func didChangeText() {
             super.didChangeText()
+            desk.update(string)
             adjust()
         }
         
@@ -82,22 +86,27 @@ final class Edit: Window  {
         
         override func keyDown(with: NSEvent) {
             switch with.keyCode {
-            case 13:
-                if with.modifierFlags.intersection(.deviceIndependentFlagsMask) == .command {
-                    window!.close()
-                } else {
-                    super.keyDown(with: with)
-                }
             case 53: window!.makeFirstResponder(nil)
             default: super.keyDown(with: with)
             }
         }
     }
     
-    init() {
-        super.init(600, 400, style: [.resizable])
-        
-        let text = Text()
+    @discardableResult init(_ desk: Desk) {
+        super.init(contentRect: NSRect(origin: {
+            app.windows.isEmpty ? CGPoint(x: (NSScreen.main!.frame.width - 600) / 2, y: (NSScreen.main!.frame.height - 400) / 2) : {
+                CGPoint(x: $0.minX + 32, y: $0.minY - 32)
+                } (app.windows.max(by: { $0.frame.minX < $1.frame.minX })!.frame)
+        } (), size: CGSize(width: 600, height: 400)),
+                   styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
+        titlebarAppearsTransparent = true
+        titleVisibility = .hidden
+        backgroundColor = .black
+        collectionBehavior = .fullScreenNone
+        minSize = NSSize(width: 100, height: 80)
+        isReleasedWhenClosed = false
+        toolbar = NSToolbar(identifier: "")
+        toolbar!.showsBaselineSeparator = false
         
         let scroll = NSScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +114,7 @@ final class Edit: Window  {
         scroll.hasVerticalScroller = true
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
-        scroll.documentView = text
+        scroll.documentView = Text(desk)
         contentView!.addSubview(scroll)
         
         let title = NSView()
@@ -129,8 +138,8 @@ final class Edit: Window  {
         scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 2).isActive = true
         scroll.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -2).isActive = true
         
-        text.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
-        text.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
+        scroll.documentView!.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+        scroll.documentView!.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
         
         name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 4).isActive = true
         name.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
@@ -139,5 +148,7 @@ final class Edit: Window  {
         title.bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 6).isActive = true
         title.leftAnchor.constraint(equalTo: name.leftAnchor, constant: -8).isActive = true
         title.rightAnchor.constraint(equalTo: name.rightAnchor, constant: 8).isActive = true
+        
+        makeKeyAndOrderFront(nil)
     }
 }

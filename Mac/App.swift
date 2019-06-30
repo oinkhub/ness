@@ -5,6 +5,8 @@ import UserNotifications
 
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
+    var session: Session! { didSet { configure() } }
+    
     required init?(coder: NSCoder) { return nil }
     override init() {
         super.init()
@@ -15,10 +17,7 @@ private(set) weak var app: App!
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
     
-    func applicationDidFinishLaunching(_: Notification) {
-        let edit = Edit()
-        edit.makeKeyAndOrderFront(nil)
-        
+    func applicationDidFinishLaunching(_: Notification) {        
         let menu = NSMenu()
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.git"))
@@ -34,6 +33,17 @@ private(set) weak var app: App!
                 NSMenuItem(title: .key("Menu.showAll"), action: #selector(unhideAllApplications(_:)), keyEquivalent: ","),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.quit"), action: #selector(terminate(_:)), keyEquivalent: "q")]
+            return $0
+        } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
+        
+        menu.addItem({
+            $0.submenu = NSMenu(title: .key("Menu.file"))
+            $0.submenu!.items = [
+                NSMenuItem(title: .key("Menu.new"), action: #selector(new), keyEquivalent: "n"),
+                NSMenuItem(title: .key("Menu.open"), action: #selector(open), keyEquivalent: "o"),
+                NSMenuItem.separator(),
+                NSMenuItem(title: .key("Menu.save"), action: #selector(save), keyEquivalent: "s"),
+                NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.close), keyEquivalent: "w")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
@@ -62,13 +72,13 @@ private(set) weak var app: App!
                     return $0
                 } (NSMenuItem(title: .key("Menu.selectAll"), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a"))]
             return $0
-            } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
+        } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.window"))
             $0.submenu!.items = [
-                NSMenuItem(title: .key("Menu.minimize"), action: #selector(Window.performMiniaturize(_:)), keyEquivalent: "m"),
-                NSMenuItem(title: .key("Menu.zoom"), action: #selector(Window.performZoom(_:)), keyEquivalent: "p"),
+                NSMenuItem(title: .key("Menu.minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m"),
+                NSMenuItem(title: .key("Menu.zoom"), action: #selector(NSWindow.performZoom(_:)), keyEquivalent: "p"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.bringAllToFront"), action: #selector(arrangeInFront(_:)), keyEquivalent: "")]
             return $0
@@ -82,11 +92,25 @@ private(set) weak var app: App!
         
         mainMenu = menu
         
-        /*Hub.session.load {
-            self.load()
-            self.rate()
+        Session.load {
+            self.session = $0
+            if $0.onboard {
+//                Onboard()
+            }
+            if Date() >= $0.rating {
+                var components = DateComponents()
+                components.month = 4
+                self.session.rating = Calendar.current.date(byAdding: components, to: Date())!
+                if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
+            }
         }
-        */
+        
+        Desk.cache {
+            $0.forEach {
+                Edit($0)
+            }
+        }
+        
         if #available(OSX 10.14, *) {
             UNUserNotificationCenter.current().delegate = self
             UNUserNotificationCenter.current().getNotificationSettings {
@@ -99,6 +123,11 @@ private(set) weak var app: App!
         }
     }
     
+    private func configure() { }
+    
+    @objc private func new() { Edit(Desk.new()) }
+    @objc private func open() { }
+    @objc private func save() { }
     @objc private func about() { }
     @objc private func settings() { }
     @objc private func help() { }
