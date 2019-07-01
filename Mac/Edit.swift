@@ -2,8 +2,8 @@ import Ness
 import AppKit
 
 final class Edit: NSWindow  {
-    private final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
-        private let padding = CGFloat(8)
+    fileprivate final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
+        fileprivate let padding = CGFloat(8)
         
         func layoutManager(_: NSLayoutManager, shouldSetLineFragmentRect: UnsafeMutablePointer<NSRect>,
                            lineFragmentUsedRect: UnsafeMutablePointer<NSRect>, baselineOffset: UnsafeMutablePointer<CGFloat>,
@@ -23,7 +23,76 @@ final class Edit: NSWindow  {
         }
     }
     
-    private final class Text: NSTextView {
+    final class Ruler: NSRulerView {
+        fileprivate weak var text: Text!
+        fileprivate weak var layout: Layout!
+        
+        required init(coder: NSCoder) { super.init(coder: coder) }
+        init() {
+            super.init(scrollView: nil, orientation: .verticalRuler)
+            ruleThickness = 40
+        }
+        
+        override func draw(_: NSRect) {
+            var numbers = [(Int, CGFloat, CGFloat)]()
+            let range = layout.glyphRange(forBoundingRect: text.visibleRect, in: text.textContainer!)
+            var i = (try! NSRegularExpression(pattern: "\n")).numberOfMatches(in: text.string,
+                                                                              range: NSMakeRange(0, range.location))
+            
+            var c = range.lowerBound
+            while c < range.upperBound {
+                i += 1
+                let end = layout.glyphRange(forCharacterRange: NSRange(location: text.string.lineRange(for:
+                    Range(NSRange(location: c, length: 0), in: text.string)!).upperBound.utf16Offset(in: text.string), length: 0),
+                                            actualCharacterRange: nil).upperBound
+                
+                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
+                                app.keyWindow!.firstResponder !== text ? 0 : { ($0.lowerBound < end && $0.upperBound > c) || $0.upperBound == c || (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.5 : 0 } (text.selectedRange())))
+                c = end
+            }
+            if layout.extraLineFragmentTextContainer != nil {
+                numbers.append((i + 1, layout.extraLineFragmentRect.midY,
+                                text.selectedRange().lowerBound == c && app.keyWindow!.firstResponder === text ? 0.7 : 0.4))
+            }
+            let y = convert(NSZeroPoint, from: text).y + text.textContainerInset.height - layout.padding - 4
+            numbers.map({ (NSAttributedString(string: String($0.0), attributes:
+                [.foregroundColor: NSColor.halo.withAlphaComponent(0.5 + $0.2), .font: NSFont.light(12)]), $0.1) })
+                .forEach { $0.0.draw(at: CGPoint(x: ruleThickness - $0.0.size().width, y: $0.1 + y)) }
+        }
+        /*
+        override func draw(_ rect: CGRect) {
+            UIGraphicsGetCurrentContext()!.clear(rect)
+            var numbers = [(Int, CGFloat, CGFloat)]()
+            let range = layout.glyphRange(for: text.textContainer)
+            var i = 0
+            var c = range.lowerBound
+            while c < range.upperBound {
+                i += 1
+                let end = layout.glyphRange(forCharacterRange: NSRange(location: text.text.lineRange(for:
+                    Range(NSRange(location: c, length: 0), in: text.text)!).upperBound.utf16Offset(in: text.text), length: 0), actualCharacterRange: nil).upperBound
+                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
+                                !text.isFirstResponder ? 0 : {
+                                    ($0.lowerBound < end && $0.upperBound > c) ||
+                                        $0.upperBound == c ||
+                                        (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.6 : 0
+                                    } (text.selectedRange)))
+                c = end
+            }
+            if layout.extraLineFragmentTextContainer != nil {
+                numbers.append((i + 1, layout.extraLineFragmentRect.midY, text.isFirstResponder && text.selectedRange.lowerBound == c ? 0.6 : 0))
+            }
+            let y = text.textContainerInset.top + layout.padding - 12
+            numbers.map({ (NSAttributedString(string: String($0.0), attributes:
+                [.foregroundColor: UIColor.halo.withAlphaComponent(0.4 + $0.2), .font: UIFont.light(14)]), $0.1) })
+                .forEach { $0.0.draw(at: CGPoint(x: thickness - $0.0.size().width, y: $0.1 + y)) }
+        }
+        */
+        override func drawHashMarksAndLabels(in: NSRect) { }
+    }
+
+    
+    final class Text: NSTextView, NSTextViewDelegate {
+        fileprivate(set) weak var ruler: Ruler!
         fileprivate let desk: Desk
         private weak var height: NSLayoutConstraint!
         
@@ -42,13 +111,14 @@ final class Edit: NSWindow  {
             drawsBackground = false
             isRichText = false
             insertionPointColor = .halo
-            isContinuousSpellCheckingEnabled = true
+            isContinuousSpellCheckingEnabled = false
             font = .light(18)
             string = desk.content
             textColor = .white
             textContainerInset = NSSize(width: 10, height: 40)
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
             height.isActive = true
+            delegate = self
             if #available(OSX 10.12.2, *) {
                 isAutomaticTextCompletionEnabled = false
             }
@@ -75,11 +145,15 @@ final class Edit: NSWindow  {
         
         override func viewDidEndLiveResize() {
             super.viewDidEndLiveResize()
-            DispatchQueue.main.async { [weak self] in self?.adjust() }
+            adjust()
+        }
+        
+        func textViewDidChangeSelection(_: Notification) {
+            DispatchQueue.main.async { self.ruler!.setNeedsDisplay(self.bounds) }
         }
         
         private func adjust() {
-            textContainer!.size.width = superview!.superview!.frame.width - (textContainerInset.width * 2)
+            textContainer!.size.width = superview!.superview!.frame.width - (textContainerInset.width * 2) - 40
             layoutManager!.ensureLayout(for: textContainer!)
             height.constant = layoutManager!.usedRect(for: textContainer!).size.height + (textContainerInset.height * 2)
         }
@@ -92,7 +166,7 @@ final class Edit: NSWindow  {
         }
     }
     
-    private weak var text: Text!
+    private(set) weak var text: Text!
     
     @discardableResult init(_ desk: Desk) {
         super.init(contentRect: NSRect(origin: {
@@ -110,7 +184,11 @@ final class Edit: NSWindow  {
         toolbar = NSToolbar(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
+        let ruler = Ruler()
         let text = Text(desk)
+        ruler.text = text
+        ruler.layout = text.layoutManager as? Layout
+        text.ruler = ruler
         self.text = text
         let scroll = NSScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -119,6 +197,8 @@ final class Edit: NSWindow  {
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
         scroll.documentView = text
+        scroll.verticalRulerView = ruler
+        scroll.rulersVisible = true
         contentView!.addSubview(scroll)
         
         let title = NSView()
@@ -144,7 +224,7 @@ final class Edit: NSWindow  {
         scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 2).isActive = true
         scroll.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -2).isActive = true
         
-        scroll.documentView!.widthAnchor.constraint(equalTo: scroll.widthAnchor).isActive = true
+        scroll.documentView!.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -40).isActive = true
         scroll.documentView!.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
         
         name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 4).isActive = true
@@ -176,19 +256,25 @@ final class Edit: NSWindow  {
     
     override func close() {
         if text.desk.cached {
+            save()
+        } else {
+            super.close()
+        }
+    }
+    
+    @objc func save() {
+        let save = NSSavePanel()
+        save.nameFieldStringValue = .key("Name.untitled")
+        if text.desk.cached {
             let discard = NSButton(frame: .init(x: 0, y: 0, width: 100, height: 40))
             discard.title = .key("Name.discard")
             discard.bezelStyle = .rounded
             discard.target = self
             discard.action = #selector(self.discard)
-            let save = NSSavePanel()
-            save.nameFieldStringValue = .key("Name.untitled")
             save.accessoryView = discard
-            save.showsTagField = false
-            save.beginSheetModal(for: self) { [weak self] result in if result == .OK { self?.save(save.url!) } }
-        } else {
-            super.close()
         }
+        save.showsTagField = false
+        save.beginSheetModal(for: self) { [weak self] result in if result == .OK { self?.save(save.url!) } }
     }
     
     private func save(_ url: URL) {

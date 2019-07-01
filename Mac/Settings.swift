@@ -26,6 +26,7 @@ final class Settings: NSWindow  {
         
         app.runModal(for: self)
     }
+    
     /*
     @objc private func save() {
         let save = NSSavePanel()

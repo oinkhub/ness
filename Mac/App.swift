@@ -37,11 +37,10 @@ private(set) weak var app: App!
         let button = NSButton(title: "", target: nil, action: nil)
         item.view = button
         button.title = .key("Touch.\(makeItemForIdentifier.rawValue)")
-        button.target = self
         switch makeItemForIdentifier.rawValue {
         case "new": button.action = #selector(new)
         case "open": button.action = #selector(open)
-        case "save": button.action = #selector(save)
+        case "save": button.action = #selector(Edit.save)
         default: break
         }
         return item
@@ -72,7 +71,7 @@ private(set) weak var app: App!
                 NSMenuItem(title: .key("Menu.new"), action: #selector(new), keyEquivalent: "n"),
                 NSMenuItem(title: .key("Menu.open"), action: #selector(open), keyEquivalent: "o"),
                 NSMenuItem.separator(),
-                NSMenuItem(title: .key("Menu.save"), action: #selector(save), keyEquivalent: "s"),
+                NSMenuItem(title: .key("Menu.save"), action: #selector(Edit.save), keyEquivalent: "s"),
                 NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.close), keyEquivalent: "w")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
@@ -171,7 +170,29 @@ private(set) weak var app: App!
         }
     }
     
-    private func configure() { }
+    private func configure() {
+        windows.compactMap({ $0 as? Edit }).forEach {
+            if session.spell {
+                $0.text.isContinuousSpellCheckingEnabled = true
+                if #available(OSX 10.12.2, *) {
+                    $0.text.isAutomaticTextCompletionEnabled = true
+                }
+            } else {
+                $0.text.isContinuousSpellCheckingEnabled = false
+                if #available(OSX 10.12.2, *) {
+                    $0.text.isAutomaticTextCompletionEnabled = false
+                }
+            }
+            $0.text.font = {
+                switch $0 {
+                case .SanFranciscoMono: return .light($1)
+                case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
+                }
+            } (session.font, CGFloat(session.size))
+//            edit.line.isHidden = !session.line
+//            edit.ruler.isHidden = !session.numbers
+        }
+    }
     
     @objc private func new() { Edit(Desk.new()) }
     
@@ -183,7 +204,6 @@ private(set) weak var app: App!
         }
     }
     
-    @objc private func save() { }
     @objc private func about() { }
     @objc private func settings() { }
     @objc private func help() { }
