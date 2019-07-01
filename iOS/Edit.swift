@@ -192,6 +192,7 @@ final class Edit: UIView, UITextViewDelegate {
         line.translatesAutoresizingMaskIntoConstraints = false
         line.backgroundColor = UIColor.halo.withAlphaComponent(0.2)
         line.alpha = 0
+        line.isHidden = true
         scroll.addSubview(line)
         self.line = line
         
@@ -204,6 +205,7 @@ final class Edit: UIView, UITextViewDelegate {
         let ruler = Ruler()
         ruler.text = text
         ruler.layout = text.layoutManager as? Layout
+        ruler.isHidden = true
         text.addSubview(ruler)
         self.ruler = ruler
         
