@@ -59,13 +59,17 @@ public class Desk {
     }
 
     public func name(_ name: String, url: @escaping((URL) -> Void)) {
+        let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
+        save(temporal) { url(temporal) }
+    }
+    
+    public func save(_ url: URL, done: @escaping(() -> Void)) {
         timer.setEventHandler(handler: nil)
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
-            let temporal = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
-            try? Data(self.content.utf8).write(to: temporal, options: .atomic)
+            try? Data(self.content.utf8).write(to: url, options: .atomic)
             try? FileManager.default.removeItem(at: self.url)
-            DispatchQueue.main.async { url(temporal) }
+            DispatchQueue.main.async { done() }
         }
     }
     

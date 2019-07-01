@@ -17,6 +17,36 @@ private(set) weak var app: App!
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
     
+    @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
+        UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        withCompletionHandler([.alert])
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 15) {
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [willPresent.request.identifier])
+        }
+    }
+    
+    @available(OSX 10.12.2, *) override func makeTouchBar() -> NSTouchBar? {
+        let bar = NSTouchBar()
+        bar.delegate = self
+        bar.defaultItemIdentifiers = [.init("new"), .init("open"), .init("save")]
+        return bar
+    }
+    
+    @available(OSX 10.12.2, *) func touchBar(_: NSTouchBar, makeItemForIdentifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
+        let item = NSCustomTouchBarItem(identifier: makeItemForIdentifier)
+        let button = NSButton(title: "", target: nil, action: nil)
+        item.view = button
+        button.title = .key("Touch.\(makeItemForIdentifier.rawValue)")
+        button.target = self
+        switch makeItemForIdentifier.rawValue {
+        case "new": button.action = #selector(new)
+        case "open": button.action = #selector(open)
+        case "save": button.action = #selector(save)
+        default: break
+        }
+        return item
+    }
+    
     func applicationDidFinishLaunching(_: Notification) {        
         let menu = NSMenu()
         menu.addItem({
@@ -120,6 +150,24 @@ private(set) weak var app: App!
                     }
                 }
             }
+        }
+    }
+    
+    func alert(_ title: String, message: String) {
+        if #available(OSX 10.14, *) {
+            UNUserNotificationCenter.current().getNotificationSettings {
+                if $0.authorizationStatus == .authorized {
+                    UNUserNotificationCenter.current().add({
+                        $0.title = title
+                        $0.body = message
+                        return UNNotificationRequest(identifier: UUID().uuidString, content: $0, trigger: nil)
+                    } (UNMutableNotificationContent()))
+                } else {
+                    DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
+                }
+            }
+        } else {
+            DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
         }
     }
     

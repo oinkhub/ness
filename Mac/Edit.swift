@@ -24,7 +24,7 @@ final class Edit: NSWindow  {
     }
     
     private final class Text: NSTextView {
-        private let desk: Desk
+        fileprivate let desk: Desk
         private weak var height: NSLayoutConstraint!
         
         init(_ desk: Desk) {
@@ -92,9 +92,11 @@ final class Edit: NSWindow  {
         }
     }
     
+    private weak var text: Text!
+    
     @discardableResult init(_ desk: Desk) {
         super.init(contentRect: NSRect(origin: {
-            app.windows.isEmpty ? CGPoint(x: (NSScreen.main!.frame.width - 600) / 2, y: (NSScreen.main!.frame.height - 400) / 2) : {
+            app.windows.isEmpty ? CGPoint(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200) : {
                 CGPoint(x: $0.minX + 32, y: $0.minY - 32)
                 } (app.windows.max(by: { $0.frame.minX < $1.frame.minX })!.frame)
         } (), size: CGSize(width: 600, height: 400)),
@@ -108,13 +110,15 @@ final class Edit: NSWindow  {
         toolbar = NSToolbar(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
+        let text = Text(desk)
+        self.text = text
         let scroll = NSScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.drawsBackground = false
         scroll.hasVerticalScroller = true
         scroll.horizontalScrollElasticity = .none
         scroll.verticalScrollElasticity = .allowed
-        scroll.documentView = Text(desk)
+        scroll.documentView = text
         contentView!.addSubview(scroll)
         
         let title = NSView()
@@ -168,5 +172,35 @@ final class Edit: NSWindow  {
         }
         
         makeKeyAndOrderFront(nil)
+    }
+    
+    override func close() {
+        if text.desk.cached {
+            let discard = NSButton(frame: .init(x: 0, y: 0, width: 100, height: 40))
+            discard.title = .key("Name.discard")
+            discard.bezelStyle = .rounded
+            discard.target = self
+            discard.action = #selector(self.discard)
+            let save = NSSavePanel()
+            save.nameFieldStringValue = .key("Name.untitled")
+            save.accessoryView = discard
+            save.showsTagField = false
+            save.beginSheetModal(for: self) { [weak self] result in if result == .OK { self?.save(save.url!) } }
+        } else {
+            super.close()
+        }
+    }
+    
+    private func save(_ url: URL) {
+        text.desk.save(url) {
+            app.alert(.key("Alert.new"), message: url.lastPathComponent)
+        }
+        super.close()
+    }
+    
+    @objc private func discard() {
+        text.desk.discard()
+        sheets.first!.close()
+        super.close()
     }
 }
