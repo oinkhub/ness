@@ -1,7 +1,7 @@
 import Ness
 import AppKit
 
-final class Edit: NSWindow  {
+final class Edit: NSWindow, NSWindowDelegate {
     fileprivate final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
         fileprivate let padding = CGFloat(8)
         
@@ -254,15 +254,38 @@ final class Edit: NSWindow  {
             left = shadow.rightAnchor
         }
         
+        configure()
         makeKeyAndOrderFront(nil)
     }
     
-    override func close() {
+    func windowShouldClose(_: NSWindow) -> Bool {
         if text.desk.cached {
             save()
-        } else {
-            super.close()
+            return false
         }
+        return true
+    }
+    
+    func configure() {
+        if app.session.spell {
+            text.isContinuousSpellCheckingEnabled = true
+            if #available(OSX 10.12.2, *) {
+                text.isAutomaticTextCompletionEnabled = true
+            }
+        } else {
+            text.isContinuousSpellCheckingEnabled = false
+            if #available(OSX 10.12.2, *) {
+                text.isAutomaticTextCompletionEnabled = false
+            }
+        }
+        text.font = {
+            switch $0 {
+            case .SanFranciscoMono: return .light($1)
+            case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
+            }
+        } (app.session.font, CGFloat(app.session.size))
+        text.line.isHidden = !app.session.line
+        text.ruler.isHidden = !app.session.numbers
     }
     
     @objc func save() {
@@ -277,19 +300,20 @@ final class Edit: NSWindow  {
             save.accessoryView = discard
         }
         save.showsTagField = false
-        save.beginSheetModal(for: self) { [weak self] result in if result == .OK { self?.save(save.url!) } }
-    }
-    
-    private func save(_ url: URL) {
-        text.desk.save(url) {
-            app.alert(.key("Alert.new"), message: url.lastPathComponent)
+        save.beginSheetModal(for: self) { [weak self] result in
+            if result == .OK {
+                self?.text.desk.save(save.url!) {
+                    app.alert(.key("Alert.new"), message: save.url!.lastPathComponent)
+                }
+                self?.delegate = nil
+                self?.close()
+            }
         }
-        super.close()
     }
     
     @objc private func discard() {
         text.desk.discard()
         sheets.first!.close()
-        super.close()
+        close()
     }
 }

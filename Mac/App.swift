@@ -5,7 +5,7 @@ import UserNotifications
 
 private(set) weak var app: App!
 @NSApplicationMain final class App: NSApplication, NSApplicationDelegate, UNUserNotificationCenterDelegate, NSTouchBarDelegate {
-    var session: Session! { didSet { configure() } }
+    var session: Session! { didSet { windows.forEach { ($0 as? Edit)?.configure() } } }
     
     required init?(coder: NSCoder) { return nil }
     override init() {
@@ -72,7 +72,7 @@ private(set) weak var app: App!
                 NSMenuItem(title: .key("Menu.open"), action: #selector(open), keyEquivalent: "o"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: .key("Menu.save"), action: #selector(Edit.save), keyEquivalent: "s"),
-                NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.close), keyEquivalent: "w")]
+                NSMenuItem(title: .key("Menu.close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")]
             return $0
         } (NSMenuItem(title: "", action: nil, keyEquivalent: "")))
         
@@ -132,11 +132,11 @@ private(set) weak var app: App!
                 self.session.rating = Calendar.current.date(byAdding: components, to: Date())!
                 if #available(OSX 10.14, *) { SKStoreReviewController.requestReview() }
             }
-        }
-        
-        Desk.cache {
-            $0.forEach {
-                Edit($0)
+            
+            Desk.cache {
+                $0.forEach {
+                    Edit($0)
+                }
             }
         }
         
@@ -167,30 +167,6 @@ private(set) weak var app: App!
             }
         } else {
             DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
-        }
-    }
-    
-    private func configure() {
-        windows.compactMap({ $0 as? Edit }).forEach {
-            if session.spell {
-                $0.text.isContinuousSpellCheckingEnabled = true
-                if #available(OSX 10.12.2, *) {
-                    $0.text.isAutomaticTextCompletionEnabled = true
-                }
-            } else {
-                $0.text.isContinuousSpellCheckingEnabled = false
-                if #available(OSX 10.12.2, *) {
-                    $0.text.isAutomaticTextCompletionEnabled = false
-                }
-            }
-            $0.text.font = {
-                switch $0 {
-                case .SanFranciscoMono: return .light($1)
-                case .SanFrancisco: return .systemFont(ofSize: $1, weight: .light)
-                }
-            } (session.font, CGFloat(session.size))
-//            edit.line.isHidden = !session.line
-//            edit.ruler.isHidden = !session.numbers
         }
     }
     
