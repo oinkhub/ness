@@ -12,6 +12,7 @@ extension NSColor {
 final class Label: NSTextField {
     override var acceptsFirstResponder: Bool { return false }
     
+    required init?(coder: NSCoder) { return nil }
     init(_ string: String = "") {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
@@ -21,6 +22,4 @@ final class Label: NSTextField {
         isSelectable = false
         stringValue = string
     }
-    
-    required init?(coder: NSCoder) { return nil }
 }

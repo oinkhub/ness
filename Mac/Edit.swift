@@ -72,6 +72,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         fileprivate let desk: Desk
         private weak var height: NSLayoutConstraint!
         
+        required init?(coder: NSCoder) { return nil }
         init(_ desk: Desk) {
             self.desk = desk
             let storage = NSTextStorage()
@@ -98,18 +99,6 @@ final class Edit: NSWindow, NSWindowDelegate {
             if #available(OSX 10.12.2, *) {
                 isAutomaticTextCompletionEnabled = false
             }
-        }
-        
-        required init?(coder: NSCoder) { return nil }
-        
-        override func becomeFirstResponder() -> Bool {
-            line.alphaValue = 1
-            return super.becomeFirstResponder()
-        }
-        
-        override func resignFirstResponder() -> Bool {
-            line.alphaValue = 0
-            return super.resignFirstResponder()
         }
         
         override func resize(withOldSuperviewSize: NSSize) {
@@ -169,6 +158,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         collectionBehavior = .fullScreenNone
         minSize = NSSize(width: 100, height: 80)
         isReleasedWhenClosed = false
+        delegate = self
         toolbar = NSToolbar(identifier: "")
         toolbar!.showsBaselineSeparator = false
         
@@ -258,10 +248,18 @@ final class Edit: NSWindow, NSWindowDelegate {
         makeKeyAndOrderFront(nil)
     }
     
+    func windowDidResignKey(_: Notification) { text.line.alphaValue = 0 }
+    func windowDidBecomeKey(_: Notification) { text.line.alphaValue = 1 }
+    
     func windowShouldClose(_: NSWindow) -> Bool {
         if text.desk.cached {
-            save()
-            return false
+            if text.desk.content.isEmpty {
+                text.desk.discard()
+                return true
+            } else {
+                save()
+                return false
+            }
         }
         return true
     }
@@ -286,6 +284,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         } (app.session.font, CGFloat(app.session.size))
         text.line.isHidden = !app.session.line
         text.ruler.isHidden = !app.session.numbers
+        text.ruler.setNeedsDisplay(text.ruler.bounds)
     }
     
     @objc func save() {

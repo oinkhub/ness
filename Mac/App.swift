@@ -46,7 +46,7 @@ private(set) weak var app: App!
         return item
     }
     
-    func applicationDidFinishLaunching(_: Notification) {        
+    func applicationDidFinishLaunching(_: Notification) {
         let menu = NSMenu()
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.git"))
@@ -170,6 +170,7 @@ private(set) weak var app: App!
         }
     }
     
+    private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
     @objc private func new() { Edit(Desk.new()) }
     
     @objc private func open() {
@@ -181,6 +182,6 @@ private(set) weak var app: App!
     }
     
     @objc private func about() { }
-    @objc private func settings() { }
+    @objc private func settings() { order(Settings.self) }
     @objc private func help() { }
 }
