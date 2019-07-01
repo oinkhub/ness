@@ -47,52 +47,28 @@ final class Edit: NSWindow  {
                                             actualCharacterRange: nil).upperBound
                 
                 numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
-                                app.keyWindow!.firstResponder !== text ? 0 : { ($0.lowerBound < end && $0.upperBound > c) || $0.upperBound == c || (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.5 : 0 } (text.selectedRange())))
+                                app.keyWindow!.firstResponder !== text ? 0 : { ($0.lowerBound < end && $0.upperBound > c) || $0.upperBound == c || (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.4 : 0 } (text.selectedRange())))
                 c = end
             }
             if layout.extraLineFragmentTextContainer != nil {
                 numbers.append((i + 1, layout.extraLineFragmentRect.midY,
-                                text.selectedRange().lowerBound == c && app.keyWindow!.firstResponder === text ? 0.7 : 0.4))
+                                text.selectedRange().lowerBound == c && app.keyWindow!.firstResponder === text ? 0.4 : 0))
             }
-            let y = convert(NSZeroPoint, from: text).y + text.textContainerInset.height - layout.padding - 4
+            let y = convert(NSZeroPoint, from: text).y + text.textContainerInset.height - layout.padding - 2
             numbers.map({ (NSAttributedString(string: String($0.0), attributes:
-                [.foregroundColor: NSColor.halo.withAlphaComponent(0.5 + $0.2), .font: NSFont.light(12)]), $0.1) })
+                [.foregroundColor: NSColor.halo.withAlphaComponent(0.6 + $0.2), .font: NSFont.light(12)]), $0.1) })
                 .forEach { $0.0.draw(at: CGPoint(x: ruleThickness - $0.0.size().width, y: $0.1 + y)) }
         }
-        /*
-        override func draw(_ rect: CGRect) {
-            UIGraphicsGetCurrentContext()!.clear(rect)
-            var numbers = [(Int, CGFloat, CGFloat)]()
-            let range = layout.glyphRange(for: text.textContainer)
-            var i = 0
-            var c = range.lowerBound
-            while c < range.upperBound {
-                i += 1
-                let end = layout.glyphRange(forCharacterRange: NSRange(location: text.text.lineRange(for:
-                    Range(NSRange(location: c, length: 0), in: text.text)!).upperBound.utf16Offset(in: text.text), length: 0), actualCharacterRange: nil).upperBound
-                numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
-                                !text.isFirstResponder ? 0 : {
-                                    ($0.lowerBound < end && $0.upperBound > c) ||
-                                        $0.upperBound == c ||
-                                        (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.6 : 0
-                                    } (text.selectedRange)))
-                c = end
-            }
-            if layout.extraLineFragmentTextContainer != nil {
-                numbers.append((i + 1, layout.extraLineFragmentRect.midY, text.isFirstResponder && text.selectedRange.lowerBound == c ? 0.6 : 0))
-            }
-            let y = text.textContainerInset.top + layout.padding - 12
-            numbers.map({ (NSAttributedString(string: String($0.0), attributes:
-                [.foregroundColor: UIColor.halo.withAlphaComponent(0.4 + $0.2), .font: UIFont.light(14)]), $0.1) })
-                .forEach { $0.0.draw(at: CGPoint(x: thickness - $0.0.size().width, y: $0.1 + y)) }
-        }
-        */
+        
         override func drawHashMarksAndLabels(in: NSRect) { }
     }
 
     
     final class Text: NSTextView, NSTextViewDelegate {
         fileprivate(set) weak var ruler: Ruler!
+        fileprivate(set) weak var line: NSView!
+        fileprivate weak var lineTop: NSLayoutConstraint!
+        fileprivate weak var lineHeight: NSLayoutConstraint!
         fileprivate let desk: Desk
         private weak var height: NSLayoutConstraint!
         
@@ -126,6 +102,16 @@ final class Edit: NSWindow  {
         
         required init?(coder: NSCoder) { return nil }
         
+        override func becomeFirstResponder() -> Bool {
+            line.alphaValue = 1
+            return super.becomeFirstResponder()
+        }
+        
+        override func resignFirstResponder() -> Bool {
+            line.alphaValue = 0
+            return super.resignFirstResponder()
+        }
+        
         override func resize(withOldSuperviewSize: NSSize) {
             super.resize(withOldSuperviewSize: withOldSuperviewSize)
             adjust()
@@ -134,6 +120,8 @@ final class Edit: NSWindow  {
         override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn: Bool) {
             var rect = rect
             rect.size.width += 3
+            lineTop.constant = rect.origin.y
+            lineHeight.constant = rect.height
             super.drawInsertionPoint(in: rect, color: color, turnedOn: turnedOn)
         }
         
@@ -201,6 +189,14 @@ final class Edit: NSWindow  {
         scroll.rulersVisible = true
         contentView!.addSubview(scroll)
         
+        let line = NSView()
+        line.translatesAutoresizingMaskIntoConstraints = false
+        line.wantsLayer = true
+        line.layer!.backgroundColor = NSColor.halo.withAlphaComponent(0.2).cgColor
+        line.alphaValue = 0
+        scroll.contentView.addSubview(line, positioned: .below, relativeTo: nil)
+        text.line = line
+        
         let title = NSView()
         title.translatesAutoresizingMaskIntoConstraints = false
         title.wantsLayer = true
@@ -224,8 +220,15 @@ final class Edit: NSWindow  {
         scroll.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 2).isActive = true
         scroll.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -2).isActive = true
         
-        scroll.documentView!.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -40).isActive = true
-        scroll.documentView!.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
+        text.widthAnchor.constraint(equalTo: scroll.widthAnchor, constant: -40).isActive = true
+        text.heightAnchor.constraint(greaterThanOrEqualTo: scroll.heightAnchor).isActive = true
+        
+        line.leftAnchor.constraint(equalTo: scroll.leftAnchor, constant: -40).isActive = true
+        line.rightAnchor.constraint(equalTo: scroll.rightAnchor).isActive = true
+        text.lineTop = line.topAnchor.constraint(equalTo: scroll.topAnchor)
+        text.lineTop.isActive = true
+        text.lineHeight = line.heightAnchor.constraint(equalToConstant: 0)
+        text.lineHeight.isActive = true
         
         name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 4).isActive = true
         name.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
