@@ -1,4 +1,5 @@
 App.new="New file";
+About.label="Ness";
 Name.title="Save as";
 Name.save="Save";
 Name.discard="Discard";

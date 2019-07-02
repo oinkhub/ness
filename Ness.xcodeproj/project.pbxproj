@@ -30,6 +30,7 @@
 		CE7FA0F622C9CDC700D0D60D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7FA0F522C9CDC700D0D60D /* Settings.swift */; };
 		CE7FA0F822C9D5BA00D0D60D /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7FA0F722C9D5BA00D0D60D /* Button.swift */; };
 		CE7FA0FA22C9F5FC00D0D60D /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7FA0F922C9F5FC00D0D60D /* Alert.swift */; };
+		CE8F54C022CB35C700636108 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8F54BF22CB35C700636108 /* About.swift */; };
 		CE98A3EF22C62ECD0025ECF3 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98A3EE22C62ECD0025ECF3 /* Settings.swift */; };
 		CE9D5A2922C0F9C6007B9474 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9D5A2822C0F9C6007B9474 /* Extensions.swift */; };
 		CEBEFF1F22C381A400E74B85 /* TestDeskLoaded.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */; };
@@ -103,6 +104,7 @@
 		CE7FA0F522C9CDC700D0D60D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CE7FA0F722C9D5BA00D0D60D /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		CE7FA0F922C9F5FC00D0D60D /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		CE8F54BF22CB35C700636108 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		CE98A3EE22C62ECD0025ECF3 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		CE9D5A2822C0F9C6007B9474 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CEBEFF1E22C381A400E74B85 /* TestDeskLoaded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDeskLoaded.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 		CE484DB422C0CCC1002D26BD /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				CE8F54BF22CB35C700636108 /* About.swift */,
 				CE7FA0F922C9F5FC00D0D60D /* Alert.swift */,
 				CE484DB522C0CCC1002D26BD /* App.swift */,
 				CE7FA0F722C9D5BA00D0D60D /* Button.swift */,
@@ -485,6 +488,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEC926BA22C1E6CF00E0A546 /* Shared.swift in Sources */,
+				CE8F54C022CB35C700636108 /* About.swift in Sources */,
 				CE7FA0F822C9D5BA00D0D60D /* Button.swift in Sources */,
 				CE484DB722C0CCC1002D26BD /* App.swift in Sources */,
 				CE7FA0F622C9CDC700D0D60D /* Settings.swift in Sources */,
