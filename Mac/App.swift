@@ -185,5 +185,5 @@ private(set) weak var app: App!
     
     @objc private func about() { order(About.self) }
     @objc private func settings() { order(Settings.self) }
-    @objc private func help() { }
+    @objc private func help() { order(Help.self) }
 }

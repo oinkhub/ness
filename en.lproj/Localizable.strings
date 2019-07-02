@@ -1,5 +1,6 @@
 App.new="New file";
 About.label="Ness";
+Help.label="New files are initially saved in a cache, you can save them to a file in your system anytime you wish.";
 Name.title="Save as";
 Name.save="Save";
 Name.discard="Discard";
