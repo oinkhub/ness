@@ -125,7 +125,10 @@ private(set) weak var app: App!
         Session.load {
             self.session = $0
             if $0.onboard {
-//                Onboard()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.help()
+                    self.session.onboard = false
+                }
             }
             if Date() >= $0.rating {
                 var components = DateComponents()
