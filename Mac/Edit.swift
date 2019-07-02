@@ -220,13 +220,13 @@ final class Edit: NSWindow, NSWindowDelegate {
         text.lineHeight = line.heightAnchor.constraint(equalToConstant: 0)
         text.lineHeight.isActive = true
         
-        name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 4).isActive = true
+        name.topAnchor.constraint(equalTo: contentView!.topAnchor, constant: 6).isActive = true
         name.centerXAnchor.constraint(equalTo: contentView!.centerXAnchor).isActive = true
         
         title.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
         title.bottomAnchor.constraint(equalTo: name.bottomAnchor, constant: 6).isActive = true
-        title.leftAnchor.constraint(equalTo: name.leftAnchor, constant: -8).isActive = true
-        title.rightAnchor.constraint(equalTo: name.rightAnchor, constant: 8).isActive = true
+        title.leftAnchor.constraint(equalTo: name.leftAnchor, constant: -10).isActive = true
+        title.rightAnchor.constraint(equalTo: name.rightAnchor, constant: 10).isActive = true
         
         var left = contentView!.leftAnchor
         (0 ..< 3).forEach {

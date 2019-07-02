@@ -22,4 +22,6 @@ final class Label: NSTextField {
         isSelectable = false
         stringValue = string
     }
+    
+    override func resetCursorRects() { addCursorRect(bounds, cursor: .arrow) }
 }
