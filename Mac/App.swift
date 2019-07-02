@@ -16,6 +16,7 @@ private(set) weak var app: App!
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
+    func application(_: NSApplication, open: [URL]) { DispatchQueue.main.async { open.forEach { Desk.load($0) { Edit($0) } } } }
     
     @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
         UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -46,7 +47,7 @@ private(set) weak var app: App!
         return item
     }
     
-    func applicationDidFinishLaunching(_: Notification) {
+    func applicationWillFinishLaunching(_: Notification) {
         let menu = NSMenu()
         menu.addItem({
             $0.submenu = NSMenu(title: .key("Menu.git"))
