@@ -129,7 +129,7 @@ final class Edit: NSWindow, NSWindowDelegate {
             DispatchQueue.main.async { self.ruler!.setNeedsDisplay(self.bounds) }
         }
         
-        private func adjust() {
+        fileprivate func adjust() {
             textContainer!.size.width = superview!.superview!.frame.width - (textContainerInset.width * 2) - 40
             layoutManager!.ensureLayout(for: textContainer!)
             height.constant = layoutManager!.usedRect(for: textContainer!).size.height + (textContainerInset.height * 2)
@@ -285,6 +285,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         text.line.isHidden = !app.session.line
         text.ruler.isHidden = !app.session.numbers
         text.ruler.setNeedsDisplay(text.ruler.bounds)
+        text.adjust()
     }
     
     @objc func save() {

@@ -51,7 +51,7 @@ final class Settings: NSWindow {
     private weak var regular: Button.Layer!
     
     init() {
-        super.init(contentRect: NSRect(x: NSScreen.main!.frame.midX - 200, y: NSScreen.main!.frame.midY - 200, width: 400, height: 400), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
+        super.init(contentRect: NSRect(x: NSScreen.main!.frame.midX - 200, y: NSScreen.main!.frame.midY - 145, width: 400, height: 290), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
@@ -107,6 +107,15 @@ final class Settings: NSWindow {
         contentView!.addSubview(regular)
         self.regular = regular
         
+        let slider = NSSlider()
+        slider.target = self
+        slider.action = #selector(slider(_:))
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.minValue = 6
+        slider.maxValue = 70
+        slider.integerValue = Int(app.session.size)
+        contentView!.addSubview(slider)
+        
         var origin = contentView!.topAnchor
         [spell, numbers, line].enumerated().forEach {
             contentView!.addSubview($0.1)
@@ -127,6 +136,10 @@ final class Settings: NSWindow {
         
         regular.centerYAnchor.constraint(equalTo: font.centerYAnchor).isActive = true
         regular.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -12).isActive = true
+        
+        slider.topAnchor.constraint(equalTo: font.bottomAnchor, constant: 30).isActive = true
+        slider.leftAnchor.constraint(equalTo: contentView!.leftAnchor, constant: 12).isActive = true
+        slider.rightAnchor.constraint(equalTo: contentView!.rightAnchor, constant: -12).isActive = true
         
         switch app.session.font {
         case .SanFranciscoMono:
@@ -155,11 +168,9 @@ final class Settings: NSWindow {
             app.session.font = .SanFrancisco
         }
     }
-    /*
-    @objc private func slider(_ slider: UISlider) {
-        app.session.size = Double(round(slider.value))
-        size.text = "\(Int(app.session.size))"
-    }
     
-    */
+    @objc private func slider(_ slider: NSSlider) {
+        size.stringValue = "\(Int(slider.integerValue))"
+        DispatchQueue.main.async { app.session.size = round(slider.doubleValue) }
+    }
 }
