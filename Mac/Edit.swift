@@ -257,7 +257,7 @@ final class Edit: NSWindow, NSWindowDelegate {
                 text.desk.discard()
                 return true
             } else {
-                save()
+                save(false)
                 return false
             }
         }
@@ -288,7 +288,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         text.adjust()
     }
     
-    @objc func save() {
+    @objc func save(_ open: Bool = true) {
         let save = NSSavePanel()
         save.nameFieldStringValue = .key("Name.untitled")
         if text.desk.cached {
@@ -304,6 +304,9 @@ final class Edit: NSWindow, NSWindowDelegate {
             if result == .OK {
                 self?.text.desk.save(save.url!) {
                     app.alert(.key("Alert.new"), message: save.url!.lastPathComponent)
+                    if open {
+                        app.edit(save.url!)
+                    }
                 }
                 self?.delegate = nil
                 self?.close()

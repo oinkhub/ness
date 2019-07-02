@@ -16,7 +16,7 @@ private(set) weak var app: App!
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool { return true }
-    func application(_: NSApplication, open: [URL]) { DispatchQueue.main.async { open.forEach { Desk.load($0) { Edit($0) } } } }
+    func application(_: NSApplication, open: [URL]) { DispatchQueue.main.async { open.forEach { self.edit($0) } } }
     
     @available(OSX 10.14, *) func userNotificationCenter(_: UNUserNotificationCenter, willPresent:
         UNNotification, withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -170,7 +170,8 @@ private(set) weak var app: App!
             DispatchQueue.main.async { Alert(title, message: message).makeKeyAndOrderFront(nil) }
         }
     }
-    
+
+    func edit(_ url: URL) { Desk.load(url) { Edit($0) } }
     private func order<W: NSWindow>(_ type: W.Type) { (windows.first(where: { $0 is W }) ?? W()).makeKeyAndOrderFront(nil) }
     @objc private func new() { Edit(Desk.new()) }
     
@@ -178,7 +179,7 @@ private(set) weak var app: App!
         let browse = NSOpenPanel()
         browse.begin { [weak browse] in
             guard $0 == .OK, let url = browse?.url else { return }
-            Desk.load(url) { Edit($0) }
+            self.edit(url)
         }
     }
     
