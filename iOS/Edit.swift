@@ -227,7 +227,6 @@ final class Edit: UIView, UITextViewDelegate {
         title.translatesAutoresizingMaskIntoConstraints = false
         title.font = .systemFont(ofSize: 14, weight: .bold)
         title.textColor = .halo
-        title.text = .key("App.new")
         title.alpha = 0
         addSubview(title)
         menu.title = title

@@ -11,7 +11,7 @@ private(set) weak var app: App!
     private(set) weak var edit: Edit!
     private var picked: ((URL) -> Void)!
     
-    func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_: UIApplication, willFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         app = self
         let window = UIWindow()
         window.rootViewController = self
@@ -29,6 +29,11 @@ private(set) weak var app: App!
             }
         }
         
+        return true
+    }
+    
+    func application(_: UIApplication, open: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        edit(open)
         return true
     }
     
@@ -66,7 +71,7 @@ private(set) weak var app: App!
             }
         }
         
-        Desk.cache { self.desk = $0.first }
+        if desk == nil { create() }
     }
     
     func alert(_ title: String, message: String) {
@@ -89,9 +94,8 @@ private(set) weak var app: App!
     
     @objc func new() {
         close {
-            self.desk = Desk.new()
+            self.create()
             self.edit.text.becomeFirstResponder()
-            self.edit.menu.title.text = .key("App.new")
         }
     }
     
@@ -101,16 +105,25 @@ private(set) weak var app: App!
             picker.popoverPresentationController?.sourceView = self.view
             picker.delegate = self
             self.present(picker, animated: true)
-            self.picked = { url in
-                Desk.load(url) {
-                    self.desk = $0
-                    self.edit.menu.title.text = url.lastPathComponent
-                }
-            }
+            self.picked = { self.edit($0) }
         }
     }
     
     @objc func settings() { Settings() }
+    
+    private func edit(_ url: URL) {
+        Desk.load(url) {
+            self.desk = $0
+            self.edit.menu.title.text = url.lastPathComponent
+        }
+    }
+    
+    private func create() {
+        Desk.cache {
+            self.desk = $0.first
+            self.edit.menu.title.text = .key("App.new")
+        }
+    }
     
     private func close(_ then: @escaping(() -> Void)) {
         window!.endEditing(true)
