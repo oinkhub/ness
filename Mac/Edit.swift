@@ -132,7 +132,7 @@ final class Edit: NSWindow, NSWindowDelegate {
         fileprivate func adjust() {
             textContainer!.size.width = superview!.superview!.frame.width - (textContainerInset.width * 2) - 40
             layoutManager!.ensureLayout(for: textContainer!)
-            height.constant = layoutManager!.usedRect(for: textContainer!).size.height + (textContainerInset.height * 2)
+            height.constant = layoutManager!.usedRect(for: textContainer!).size.height + (textContainerInset.height * 2) + 10
         }
         
         override func keyDown(with: NSEvent) {
