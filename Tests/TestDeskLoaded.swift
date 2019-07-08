@@ -42,4 +42,18 @@ final class TestDeskLoaded: XCTestCase {
         }
         waitForExpectations(timeout: 1)
     }
+    
+    func testSave() {
+        let expect = expectation(description: "")
+        let new = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
+        Desk.load(url) {
+            self.desk = $0
+            self.desk.save(new) {
+                XCTAssertTrue(FileManager.default.fileExists(atPath: self.url.path))
+                XCTAssertEqual("hello world", try? String(decoding: Data(contentsOf: new), as: UTF8.self))
+                expect.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+    }
 }

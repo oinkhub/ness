@@ -68,7 +68,9 @@ public class Desk {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
             try? Data(self.content.utf8).write(to: url, options: .atomic)
-            try? FileManager.default.removeItem(at: self.url)
+            if self.cached {
+                try? FileManager.default.removeItem(at: self.url)
+            }
             DispatchQueue.main.async { done() }
         }
     }
