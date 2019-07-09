@@ -47,6 +47,9 @@ public class Desk {
         timer.schedule(deadline: .distantFuture)
         timer.setEventHandler { [weak self] in
             guard let self = self else { return }
+            if !FileManager.default.fileExists(atPath: self.url.deletingLastPathComponent().path) {
+                try! FileManager.default.createDirectory(at: self.url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            }
             try! Data(self.content.utf8).write(to: self.url, options: .atomic)
         }
     }

@@ -4,16 +4,19 @@ import XCTest
 final class TestDeskLoaded: XCTestCase {
     private var url: URL!
     private var desk: Desk!
+    private var dir: URL!
     
     override func setUp() {
-        url = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
+        dir = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("dir")
+        try! FileManager.default.createDirectory(at: dir, withIntermediateDirectories: false)
+        url = dir.appendingPathComponent(UUID().uuidString)
         try! Data("hello world".utf8).write(to: url)
         try! FileManager.default.createDirectory(at: Desk.url, withIntermediateDirectories: true)
         Desk.timeout = 0
     }
     
     override func tearDown() {
-        try? FileManager.default.removeItem(at: url)
+        try? FileManager.default.removeItem(at: dir)
         try! FileManager.default.removeItem(at: Desk.url)
     }
     
@@ -31,7 +34,6 @@ final class TestDeskLoaded: XCTestCase {
     
     func testCloseChanged() {
         let expect = expectation(description: "")
-        Desk.timeout = 0
         Desk.load(url) {
             self.desk = $0
             self.desk.update("updated text")
@@ -51,6 +53,20 @@ final class TestDeskLoaded: XCTestCase {
             self.desk.save(new) {
                 XCTAssertTrue(FileManager.default.fileExists(atPath: self.url.path))
                 XCTAssertEqual("hello world", try? String(decoding: Data(contentsOf: new), as: UTF8.self))
+                expect.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testSaveAfterDeleteFolder() {
+        let expect = expectation(description: "")
+        Desk.load(url) {
+            self.desk = $0
+            try! FileManager.default.removeItem(at: self.dir)
+            self.desk.update("updated text")
+            DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.01) {
+                XCTAssertEqual("updated text", try? String(decoding: Data(contentsOf: self.url), as: UTF8.self))
                 expect.fulfill()
             }
         }
