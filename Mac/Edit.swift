@@ -148,7 +148,7 @@ final class Edit: NSWindow, NSWindowDelegate {
     @discardableResult init(_ desk: Desk) {
         super.init(contentRect: NSRect(origin: {
             app.windows.isEmpty ? CGPoint(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200) : {
-                CGPoint(x: $0.minX + 32, y: $0.minY - 32)
+                CGPoint(x: $0.minX + 32, y: $0.maxY - 432)
                 } (app.windows.max(by: { $0.frame.minX < $1.frame.minX })!.frame)
         } (), size: CGSize(width: 600, height: 400)),
                    styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
