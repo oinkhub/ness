@@ -2,7 +2,7 @@ import AppKit
 
 final class Help: NSWindow {
     @discardableResult init() {
-        super.init(contentRect: NSRect(x: NSScreen.main!.frame.midX - 150, y: NSScreen.main!.frame.midY - 70, width: 300, height: 140), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 150, y: NSScreen.main!.frame.midY - 70, width: 300, height: 140), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black

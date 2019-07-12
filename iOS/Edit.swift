@@ -127,7 +127,7 @@ final class Edit: UIView, UITextViewDelegate {
             let y = text.textContainerInset.top + layout.padding - 12
             numbers.map({ (NSAttributedString(string: String($0.0), attributes:
                 [.foregroundColor: UIColor.halo.withAlphaComponent(0.4 + $0.2), .font: UIFont.light(14)]), $0.1) })
-                .forEach { $0.0.draw(at: CGPoint(x: thickness - $0.0.size().width, y: $0.1 + y)) }
+                .forEach { $0.0.draw(at: .init(x: thickness - $0.0.size().width, y: $0.1 + y)) }
         }
     }
 

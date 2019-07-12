@@ -50,7 +50,7 @@ private(set) weak var app: App!
     func applicationWillFinishLaunching(_: Notification) {
         let menu = NSMenu()
         menu.addItem({
-            $0.submenu = NSMenu(title: .key("Menu.git"))
+            $0.submenu = NSMenu(title: .key("Menu.ness"))
             $0.submenu!.items = [
                 NSMenuItem(title: .key("Menu.about"), action: #selector(about), keyEquivalent: ""),
                 NSMenuItem.separator(),

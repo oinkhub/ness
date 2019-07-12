@@ -57,7 +57,7 @@ final class Edit: NSWindow, NSWindowDelegate {
             let y = convert(NSZeroPoint, from: text).y + text.textContainerInset.height - layout.padding - 2
             numbers.map({ (NSAttributedString(string: String($0.0), attributes:
                 [.foregroundColor: NSColor.halo.withAlphaComponent(0.6 + $0.2), .font: NSFont.light(12)]), $0.1) })
-                .forEach { $0.0.draw(at: CGPoint(x: ruleThickness - $0.0.size().width, y: $0.1 + y)) }
+                .forEach { $0.0.draw(at: .init(x: ruleThickness - $0.0.size().width, y: $0.1 + y)) }
         }
         
         override func drawHashMarksAndLabels(in: NSRect) { }
@@ -91,7 +91,7 @@ final class Edit: NSWindow, NSWindowDelegate {
             font = .light(18)
             string = desk.content
             textColor = .white
-            textContainerInset = NSSize(width: 10, height: 40)
+            textContainerInset = .init(width: 10, height: 40)
             height = heightAnchor.constraint(greaterThanOrEqualToConstant: 0)
             height.isActive = true
             delegate = self
@@ -151,17 +151,17 @@ final class Edit: NSWindow, NSWindowDelegate {
     private(set) weak var text: Text!
     
     @discardableResult init(_ desk: Desk) {
-        super.init(contentRect: NSRect(origin: {
-            app.windows.isEmpty ? CGPoint(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200) : {
-                CGPoint(x: $0.minX + 32, y: $0.maxY - 432)
+        super.init(contentRect: .init(origin: {
+            app.windows.isEmpty ? .init(x: NSScreen.main!.frame.midX - 300, y: NSScreen.main!.frame.midY - 200) : {
+                .init(x: $0.minX + 32, y: $0.maxY - 432)
                 } (app.windows.max(by: { $0.frame.minX < $1.frame.minX })!.frame)
-        } (), size: CGSize(width: 600, height: 400)),
+        } (), size: .init(width: 600, height: 400)),
                    styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable, .resizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
         collectionBehavior = .fullScreenNone
-        minSize = NSSize(width: 100, height: 80)
+        minSize = .init(width: 100, height: 80)
         isReleasedWhenClosed = false
         delegate = self
         toolbar = NSToolbar(identifier: "")

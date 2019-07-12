@@ -22,6 +22,7 @@ Alert.new="Saved";
 Touch.new="New";
 Touch.open="Open";
 Touch.save="Save as..";
+Menu.ness="Ness";
 Menu.about="About";
 Menu.preferences="Preferences";
 Menu.hide="Hide";

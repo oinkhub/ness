@@ -51,7 +51,7 @@ final class Settings: NSWindow {
     private weak var regular: Button.Layer!
     
     init() {
-        super.init(contentRect: NSRect(x: NSScreen.main!.frame.midX - 200, y: NSScreen.main!.frame.midY - 145, width: 400, height: 290), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
+        super.init(contentRect: .init(x: NSScreen.main!.frame.midX - 200, y: NSScreen.main!.frame.midY - 145, width: 400, height: 290), styleMask: [.closable, .fullSizeContentView, .titled, .unifiedTitleAndToolbar, .miniaturizable], backing: .buffered, defer: false)
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
         backgroundColor = .black
