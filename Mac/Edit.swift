@@ -62,7 +62,6 @@ final class Edit: NSWindow, NSWindowDelegate {
         
         override func drawHashMarksAndLabels(in: NSRect) { }
     }
-
     
     final class Text: NSTextView, NSTextViewDelegate {
         fileprivate(set) weak var ruler: Ruler!
@@ -140,6 +139,12 @@ final class Edit: NSWindow, NSWindowDelegate {
             case 53: window!.makeFirstResponder(nil)
             default: super.keyDown(with: with)
             }
+        }
+        
+        override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+            guard let url = (sender.draggingPasteboard.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? NSArray)?[0] as? String else { return false }
+            app.edit(URL(fileURLWithPath: url))
+            return true
         }
     }
     
