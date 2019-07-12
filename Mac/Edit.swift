@@ -47,12 +47,12 @@ final class Edit: NSWindow, NSWindowDelegate {
                                             actualCharacterRange: nil).upperBound
                 
                 numbers.append((i, layout.lineFragmentRect(forGlyphAt: c, effectiveRange: nil, withoutAdditionalLayout: true).midY,
-                                app.keyWindow!.firstResponder !== text ? 0 : { ($0.lowerBound < end && $0.upperBound > c) || $0.upperBound == c || (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.4 : 0 } (text.selectedRange())))
+                                app.keyWindow?.firstResponder !== text ? 0 : { ($0.lowerBound < end && $0.upperBound > c) || $0.upperBound == c || (layout.extraLineFragmentTextContainer == nil && $0.upperBound == end && end == range.upperBound) ? 0.4 : 0 } (text.selectedRange())))
                 c = end
             }
             if layout.extraLineFragmentTextContainer != nil {
                 numbers.append((i + 1, layout.extraLineFragmentRect.midY,
-                                text.selectedRange().lowerBound == c && app.keyWindow!.firstResponder === text ? 0.4 : 0))
+                                text.selectedRange().lowerBound == c && app.keyWindow?.firstResponder === text ? 0.4 : 0))
             }
             let y = convert(NSZeroPoint, from: text).y + text.textContainerInset.height - layout.padding - 2
             numbers.map({ (NSAttributedString(string: String($0.0), attributes:
