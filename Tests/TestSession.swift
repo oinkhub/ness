@@ -1,7 +1,7 @@
 import XCTest
 @testable import Ness
 
-class TestSession: XCTestCase {
+final class TestSession: XCTestCase {
     override func setUp() {
         UserDefaults.standard.removeObject(forKey: "session")
     }
