@@ -63,14 +63,8 @@ final class Edit: UIView, UITextViewDelegate {
     }
     
     fileprivate final class Layout: NSLayoutManager, NSLayoutManagerDelegate {
-        let padding = CGFloat(4)
+        fileprivate let padding = CGFloat(4)
         
-        required init?(coder: NSCoder) { return nil }
-        override init() {
-            super.init()
-            delegate = self
-        }
-
         func layoutManager(_: NSLayoutManager, shouldSetLineFragmentRect: UnsafeMutablePointer<CGRect>,
                            lineFragmentUsedRect: UnsafeMutablePointer<CGRect>, baselineOffset: UnsafeMutablePointer<CGFloat>,
                            in: NSTextContainer, forGlyphRange: NSRange) -> Bool {
@@ -140,6 +134,7 @@ final class Edit: UIView, UITextViewDelegate {
         init() {
             let storage = NSTextStorage()
             super.init(frame: .zero, textContainer: {
+                $1.delegate = $1
                 storage.addLayoutManager($1)
                 $1.addTextContainer($0)
                 return $0
